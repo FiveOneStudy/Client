@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "../../components/auth/Button";
 import { Input } from "../../components/auth/Input";
 import { Password } from "../../components/auth/Password";
@@ -14,7 +15,7 @@ export function Login() {
 
           {/* 비밀번호 + 찾기 묶기 */}
           <div className="flex flex-col gap-2">
-            <Password />
+            <Password>비밀번호</Password>
 
             <div className="text-sm text-gray-600 text-left font-medium font-noto">
               비밀번호를 잊으셨나요?{" "}
@@ -34,12 +35,11 @@ export function Login() {
 
           <div className="text-sm mt-1 text-gray-600 text-center font-medium font-noto">
             따잇이 처음이신가요?{" "}
-            <a
-              href="#"
+            <Link to="/SignUp"
               className="text-P400 font-medium no-underline hover:no-underline"
             >
               <b>회원가입</b>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

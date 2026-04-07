@@ -2,14 +2,14 @@ import { useState } from "react";
 import OnEye from "../../assets/OnEye.png";
 import OffEye from "../../assets/OffEye.png";
 
-export function Password() {
+export function Password({children}) {
   const [show, setShow] = useState(false);
 
   return (
     <div className="relative w-96">
       <input
         type={show ? "text" : "password"}
-        placeholder="비밀번호"
+        placeholder={children}
         className="
           w-full bg-gray-50 h-card rounded-md 
           border border-gray-400 
