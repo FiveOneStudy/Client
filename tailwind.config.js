@@ -11,7 +11,12 @@ module.exports = {
       },
       height:{
         card: "60px",
-      }
+        box: "500px",
+      },
+      fontFamily: {
+        pretendard: ["Pretendard", "sans-serif"],
+        noto: ['"Noto Sans KR"', 'sans-serif'],
+      },
     },
   },
   plugins: [],
