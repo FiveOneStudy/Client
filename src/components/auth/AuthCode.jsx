@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export function AuthCode() {
-  const [time, setTime] = useState(2);
+  const [time, setTime] = useState(180);
   const [expired, setExpired] = useState(false);
 
   useEffect(() => {
