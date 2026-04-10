@@ -1,4 +1,6 @@
 import { Button } from "../../components/auth/Button";
+import { Input } from "../../components/auth/Input";
+import { AuthCode } from "../../components/auth/AuthCode";
 import { Password } from "../../components/auth/Password";
 
 export function PasswordReset() {
