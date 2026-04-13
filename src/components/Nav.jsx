@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import logo from '../assets/logo.png';
+import logo from '../assets/logo.svg';
 import searchIcon from '../assets/search.png';
 import bellIcon from '../assets/bell.png';
 

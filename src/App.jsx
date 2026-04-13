@@ -5,6 +5,7 @@ import { SignUp } from './pages/auth/SignUp.jsx';
 import { FindPassword } from './pages/auth/FindPassword.jsx';
 import { PasswordReset } from './pages/auth/PasswordReset.jsx';
 import { My } from './pages/My.jsx';
+import { Community } from './pages/community/Community.jsx';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/findpassword" element={<FindPassword />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/my" element={<My />} />
+        <Route path='/community' element={<Community/>} />
       </Routes>
     </BrowserRouter>
   );
