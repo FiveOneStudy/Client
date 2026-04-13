@@ -1,9 +1,17 @@
 import { useState } from "react";
 import UpIcon from "../assets/up.png";
 import DownIcon from "../assets/down.png";
+import { PlusButton } from "../components/plan/PlusButton";
 
 export function Plan() {
-  return <Calendar />;
+  return (
+    <>
+      <div className="flex gap-40 justify-center mt-10">
+        <Calendar />
+        <Schedule />
+      </div>
+    </>
+  );
 }
 
 function Calendar() {
@@ -48,7 +56,7 @@ function Calendar() {
     year === today.getFullYear();
 
   return (
-    <div className="w-[600px] h-[590px] ml-24 mt-9 border-2 rounded-2xl bg-white overflow-hidden">
+    <div className="w-[600px] h-[590px] border-2 rounded-2xl bg-white overflow-hidden">
       {/* 상단 영역 */}
       <div className="p-6">
         {/* 헤더 */}
@@ -151,6 +159,74 @@ function Calendar() {
             );
           })}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function Schedule() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  const [showInput, setShowInput] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [todos, setTodos] = useState([]);
+
+  const handleAdd = () => {
+    if (inputValue.trim() === "") return;
+    setTodos([...todos, inputValue]);
+    setInputValue("");
+    setShowInput(false);
+  };
+
+  return (
+    <div className="w-[580px] h-[590px] border-2 rounded-2xl bg-white overflow-hidden">
+      <div className="p-6">
+        <div className="font-medium">
+          {year}.{month}.{day}
+        </div>
+        <h2 className="text-3xl font-medium mb-6">Schedule</h2>
+
+        {/* 일정 리스트 */}
+        <ul className="mb-4">
+          {todos.map((todo, index) => (
+            <li key={index} className="mb-2">
+              • {todo}
+            </li>
+          ))}
+        </ul>
+<PlusButton></PlusButton>
+
+        {/* 입력창 */}
+        {showInput && (
+          <div className="flex gap-2 mb-4">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="border px-2 py-1 rounded w-full"
+              placeholder="일정을 입력하세요"
+            />
+            <button
+              onClick={handleAdd}
+              className="bg-blue-500 text-white px-3 py-1 rounded"
+            >
+              추가
+            </button>
+          </div>
+        )}
+
+        {/* 일정 추가 버튼 */}
+        <button
+          onClick={() => setShowInput(true)}
+          className="text-red-400 flex items-center gap-1"
+        >
+          <img src=""></img> 일정 추가
+        </button>
+        <div className="w-[30%] my-[1%] border-[1px] border-P300"></div>
       </div>
     </div>
   );

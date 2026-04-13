@@ -5,6 +5,8 @@ module.exports = {
     extend: {
       colors: {
         P400: "#F5AFAF",
+        P300: "#F9DFDF",
+        P100: "#FCF8F8",
       },
       width: {
         card: "335px",
