@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
+import dropdown from '../../assets/dropdown.svg';
 import { PostTableHeader } from '../../components/community/PostTableHeader'; 
 import { PostList } from '../../components/community/PostList';
 import { UserActionPanel } from '../../components/community/UserActionPanel';
 
-export function Community() { 
+export function Recent() { 
   const posts = [ 
     { title: "컴퓨터활용능력 1급", date: "2026.03.30", views: 20 }, 
     { title: "한국사 너무 어려워요", date: "2026.03.30", views: 15 }, 
@@ -27,18 +28,15 @@ export function Community() {
 
   return( 
     <div className="min-h-[100%] min-w-[100%] pt-[40px] px-[60px] flex flex-row place-content-between">
-      <div className='w-[1040px] flex flex-col gap-[20px]'>
+      <div className='w-[1040px] flex flex-col gap-[20px] pt-[68px]'>
         <div> 
-          <div className="w-[1040px] pl-[20px] text-black text-[32px] font-medium" onClick={() => navigate('/community/popularity')}>인기순</div> 
+          <div className="w-[780px] flex flex-row gap-1">
+            <img src={dropdown} className="w-[32px] rotate-180" onClick={() => navigate("/community")} />
+            <div className="w-[1040px] pl-[4px] text-black text-[32px] font-medium">최신순</div> 
+          </div> 
           <PostTableHeader /> 
-          <PostList posts={posts} items={5}/>
+          <PostList posts={posts} items={10}/>
         </div> 
-
-        <div>
-        <div className="w-[1040px] pl-[20px] text-black text-[32px] font-medium" onClick={() => navigate('/community/recent')}>최신순</div> 
-          <PostTableHeader /> 
-          <PostList posts={posts} items={5}/>
-        </div>
       </div>
 
       <UserActionPanel />
