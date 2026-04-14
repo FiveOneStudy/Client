@@ -14,7 +14,7 @@ export function Write() {
         </div>
         <div className="w-[780px] h-[560px] flex flex-col px-[34px] pt-[36px] pb-[16px] rounded-xl shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)] border border-P300">
           <input type="text" placeholder="제목"
-            className="w-full border-none outline-none text-[36px] font-semibold"
+            className="w-full border-none outline-none text-[36px] font-medium"
           />
           <WriteUser name={"주여진"} date={"2026.04.13"} views={0}/>
           <textarea placeholder="내용"
