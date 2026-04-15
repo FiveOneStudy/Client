@@ -4,9 +4,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        P400: "#F5AFAF",
-        P300: "#F9DFDF",
         P100: "#FCF8F8",
+        P300: "#F9DFDF",
+        P400: "#F5AFAF",
+        G200: "#CDCDCF",
+        G300: "#B4B5B7",
+        G500: "#828387",
       },
       width: {
         card: "335px",
