@@ -79,7 +79,7 @@ function Calendar({ selectedDate, setSelectedDate, todos }) {
                 setSelectedDate(new Date());
               }}
               className={`px-3 py-1 border border-gray-400 rounded-lg font-semibold cursor-pointer ${
-                isSelectedToday ? "text-P400" : "text-gray-500"
+                isSelectedToday ? "text-P400" : "text-G500"
               }`}
             >
               today
@@ -101,7 +101,7 @@ function Calendar({ selectedDate, setSelectedDate, todos }) {
         </div>
       </div>
 
-      <div className="border-t border-gray-300">
+      <div className="border-t border-G300">
         <div className="grid grid-cols-7">
           {dates.map((date, idx) => {
             const isLastCol = (idx + 1) % 7 === 0;
@@ -132,7 +132,7 @@ function Calendar({ selectedDate, setSelectedDate, todos }) {
                   if (date.isCurrent)
                     setSelectedDate(new Date(year, month, date.day));
                 }}
-                className={`h-[80px] cursor-pointer border-r border-b-2 border-gray-300
+                className={`h-[80px] cursor-pointer border-r border-b-2 border-G200
                 ${isLastCol && "border-r-0"}
                 ${isLastRow && "border-b-0"}
                 ${!date.isCurrent && "text-gray-300"}`}
@@ -157,8 +157,9 @@ function Calendar({ selectedDate, setSelectedDate, todos }) {
                         .map((todo, i) => (
                           <div
                             key={i}
-                            className="bg-green-200 text-xs rounded px-1 truncate"
+                            className="text-xs rounded px-1 truncate flex items-center gap-1 h-5 font-medium border-l-[5px] border-[#6FCF8D]  bg-[#6FCF8D]/50"
                           >
+                            
                             {todo.text}
                           </div>
                         ))}
@@ -315,7 +316,7 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleAdd();
                 }}
-                className="w-full outline-none bg-transparent"
+                className="w-full outline-none bg-transparent font-medium text-base"
                 placeholder="일정을 입력하세요"
               />
             </li>
