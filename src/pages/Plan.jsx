@@ -157,7 +157,7 @@ function Calendar({ selectedDate, setSelectedDate, todos }) {
                         .map((todo, i) => (
                           <div
                             key={i}
-                            className="text-xs rounded px-1 truncate flex items-center gap-1 h-5 font-medium border-l-[5px] border-[#6FCF8D]  bg-[#6FCF8D]/50"
+                            className="text-xs rounded truncate flex items-center gap-1 h-5 font-medium border-l-[5px] border-[#6FCF8D]  bg-[#6FCF8D]/50"
                           >
                             
                             {todo.text}
