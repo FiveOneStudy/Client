@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import logo from '../assets/logo.svg';
-import searchIcon from '../assets/search.png';
-import bellIcon from '../assets/bell.png';
+import searchIcon from '../assets/search.svg';
+import bellIcon from '../assets/bell.svg';
 
 const NAV_LINKS = [
   { to: '/main', label: 'MAIN' },

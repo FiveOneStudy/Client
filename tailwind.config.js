@@ -5,8 +5,10 @@ module.exports = {
     extend: {
       colors: {
         White : "#FFFFFF",
+        P100: "#FCF8F8",
         P300: "#F9DFDF",
         P400: "#F5AFAF",
+        G200: "#CDCDCF",
         G300: "#B4B5B7",
         G500: "#828387",
       },
