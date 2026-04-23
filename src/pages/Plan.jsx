@@ -157,9 +157,8 @@ function Calendar({ selectedDate, setSelectedDate, todos }) {
                         .map((todo, i) => (
                           <div
                             key={i}
-                            className="text-xs rounded truncate flex items-center px-[2px] gap-1 h-5 font-medium border-l-[5px] border-[#6FCF8D]  bg-[#6FCF8D]/50"
+                            className="text-xs rounded truncate flex items-center px-[2px] gap-1 h-5 font-medium border-l-[5px] border-[#6FCF8D] bg-[#6FCF8D]/50"
                           >
-                            
                             {todo.text}
                           </div>
                         ))}
@@ -192,9 +191,10 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
     (todo) => todo.date === selectedDate.toDateString(),
   );
 
-  const filteredChecklist = checklist.filter(
-    (item) => item.date === selectedDate.toDateString(),
-  );
+  const filteredChecklist = checklist
+    .map((item, globalIndex) => ({ ...item, globalIndex }))
+    .filter((item) => item.date === selectedDate.toDateString())
+    .sort((a, b) => a.checked - b.checked);
 
   // 일정 추가
   const handleAdd = () => {
@@ -243,13 +243,11 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
   };
 
   // 계획 수정
-  const handleCheckEditSave = (index, newText) => {
+  const handleCheckEditSave = (globalIndex, newText) => {
     if (newText.trim() === "") {
-      handleCheckDelete(index);
+      handleCheckDelete(globalIndex);
       return;
     }
-    const target = filteredChecklist[index];
-    const globalIndex = checklist.indexOf(target);
     const newList = [...checklist];
     newList[globalIndex] = { ...newList[globalIndex], text: newText };
     setChecklist(newList);
@@ -257,9 +255,8 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
   };
 
   // 계획 삭제
-  const handleCheckDelete = (index) => {
-    const target = filteredChecklist[index];
-    setChecklist(checklist.filter((item) => item !== target));
+  const handleCheckDelete = (globalIndex) => {
+    setChecklist(checklist.filter((_, i) => i !== globalIndex));
     setCheckMenuIndex(null);
   };
 
@@ -338,16 +335,16 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
 
         <ul className="mb-4">
           {filteredChecklist.map((item, index) => (
-            <li key={index} className="flex items-center mb-3">
-              {checkEditingIndex === index ? (
+            <li key={item.globalIndex} className="flex items-center mb-3">
+              {checkEditingIndex === item.globalIndex ? (
                 <>
                   <div className="w-6 h-6 border rounded-sm flex items-center justify-center bg-P100 border-P300 mr-2" />
                   <input
                     autoFocus
                     defaultValue={item.text}
-                    onBlur={(e) => handleCheckEditSave(index, e.target.value)}
+                    onBlur={(e) => handleCheckEditSave(item.globalIndex, e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") handleCheckEditSave(index, e.target.value);
+                      if (e.key === "Enter") handleCheckEditSave(item.globalIndex, e.target.value);
                       if (e.key === "Escape") setCheckEditingIndex(null);
                     }}
                     className="flex-1 outline-none font-medium text-base"
@@ -359,10 +356,8 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
                     text={item.text}
                     checked={item.checked}
                     onToggle={() => {
-                      const target = filteredChecklist[index];
-                      const globalIndex = checklist.indexOf(target);
                       const newList = [...checklist];
-                      newList[globalIndex].checked = !newList[globalIndex].checked;
+                      newList[item.globalIndex].checked = !newList[item.globalIndex].checked;
                       setChecklist(newList);
                     }}
                   />
@@ -370,11 +365,11 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
               )}
 
               <MoreMenu
-                index={index}
+                index={item.globalIndex}
                 menuIndex={checkMenuIndex}
                 setMenuIndex={setCheckMenuIndex}
                 setEditingIndex={setCheckEditingIndex}
-                handleDelete={handleCheckDelete}
+                handleDelete={() => handleCheckDelete(item.globalIndex)}
               />
             </li>
           ))}
