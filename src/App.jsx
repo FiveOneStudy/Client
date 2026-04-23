@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Nav } from './components/Nav.jsx';
 import { Login } from './pages/auth/Login.jsx';
@@ -6,12 +7,22 @@ import { FindPassword } from './pages/auth/FindPassword.jsx';
 import { PasswordReset } from './pages/auth/PasswordReset.jsx';
 import { MyStudy } from './pages/MyStudy.jsx';
 import { My } from './pages/My.jsx';
+<<<<<<< feature/main-ui
 import { Main } from './pages/Main.jsx';
+=======
+import { Plan } from "./pages/Plan.jsx";
+import { Community } from './pages/community/Community.jsx';
+import { Popularity } from './pages/community/Popularity.jsx';
+import { Recent } from './pages/community/Recent.jsx';
+import { Mypost } from './pages/community/Mypost.jsx';
+import { Mycomment } from './pages/community/Mycomment.jsx';
+import { Write } from './pages/community/Write.jsx'
+>>>>>>> master
 
 function App() {
   return (
     <BrowserRouter>
-      <Nav />
+
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
@@ -19,7 +30,17 @@ function App() {
         <Route path="/study" element={<MyStudy />} />
         <Route path="/findpassword" element={<FindPassword />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
+      </Routes>
+      <Nav />
+      <Routes>
         <Route path="/my" element={<My />} />
+        <Route path="/plan" element={<Plan />} />
+        <Route path='/community' element={<Community/>} />
+        <Route path='/community/popularity' element={<Popularity/>} />
+        <Route path='/community/recent' element={<Recent/>} />
+        <Route path='/community/mypost' element={<Mypost/>} />
+        <Route path='/community/mycomment' element={<Mycomment/>} />
+        <Route path='/community/write' element={<Write/>} />
       </Routes>
     </BrowserRouter>
   );

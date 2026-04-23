@@ -1,8 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+<<<<<<< feature/main-ui
 import logo from '../assets/logo.png';
 import bellIcon from '../assets/bell.png';
 import SearchBar from '../components/SearchBar';
+=======
+import logo from '../assets/logo.svg';
+import searchIcon from '../assets/search.svg';
+import bellIcon from '../assets/bell.svg';
+>>>>>>> master
 
 const NAV_LINKS = [
   { to: '/main', label: 'MAIN' },
@@ -76,4 +82,26 @@ export function Nav() {
       </div>
     </nav>
   );
+<<<<<<< feature/main-ui
+=======
+}
+
+function SearchBar() {
+  const [query, setQuery] = useState('');
+
+  return (
+    <div className="w-[440px] h-11 bg-white rounded-full flex items-center px-5 shadow-sm shrink-0">
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="검색어를 입력하세요"
+        className="flex-1 outline-none text-base bg-transparent"
+      />
+      <button onClick={() => console.log(query + ' 검색')}>
+        <img src={searchIcon} alt="search" className="ml-2 w-6 h-6 " />
+      </button>
+    </div>
+  );
+>>>>>>> master
 }
