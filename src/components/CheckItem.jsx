@@ -5,11 +5,11 @@ export default function CheckItem({ text, checked, onToggle }) {
       className="flex items-center gap-2 cursor-pointer"
     >
       {/* 체크박스 */}
-      <div className="w-4 h-4 border rounded-sm flex items-center justify-center bg-[#FCF8F8] border-pink-200">
+      <div className="w-6 h-6 border rounded-sm flex items-center justify-center bg-[#FCF8F8] border-[#F9DFDF]">
         {checked && (
           <svg
             viewBox="0 0 24 24"
-            className="w-3 h-3 text-[#F5AFAF]"
+            className="w-4 h-4 text-[#F5AFAF]"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"

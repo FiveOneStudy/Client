@@ -25,12 +25,14 @@ export default function Calendar() {
   return (
     <div className="h-full flex flex-col w-[400px]">
 
+      {/* 상단 월 이동 */}
       <div className="flex justify-center items-center gap-4 mb-2 text-sm">
         <button onClick={prevMonth}>&lt;</button>
         <div className="font-semibold">{month + 1}월</div>
         <button onClick={nextMonth}>&gt;</button>
       </div>
 
+      {/* 요일 */}
       <div className="grid grid-cols-7 text-[11px] text-center mb-2">
         {['일','월','화','수','목','금','토'].map((d, i) => (
           <div
@@ -48,6 +50,7 @@ export default function Calendar() {
         ))}
       </div>
 
+      {/* 날짜 */}
       <div className="grid grid-cols-7 gap-[4px]">
         {days.map((day, i) => {
           const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
@@ -56,16 +59,18 @@ export default function Calendar() {
           return (
             <div
               key={i}
-              className="relative border h-[40px] flex flex-col items-center justify-end pb-[4px]"
+              className="relative border h-[40px] flex items-center justify-center"
             >
+              {/* 날짜 */}
               {day && (
                 <div className="absolute -top-[10px] bg-white px-[6px] py-[1px] text-[10px]">
                   {day}
                 </div>
               )}
 
+              {/* 🔥 이벤트 (위쪽으로 이동됨) */}
               {event && (
-                <div className="text-[9px] bg-[#FFD6D6] text-white px-1">
+                <div className="absolute top-[4px] text-[9px] bg-[#FF6C6C] text-white px-1 rounded">
                   {event}
                 </div>
               )}
