@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
 
+
 import logo from '../assets/logo.png';
 import bellIcon from '../assets/bell.png';
 import SearchBar from '../components/SearchBar';
@@ -79,7 +80,6 @@ export function Nav() {
       </div>
     </nav>
   );
-
 }
 
 function SearchBar() {
