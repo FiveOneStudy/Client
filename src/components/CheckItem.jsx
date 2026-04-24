@@ -5,7 +5,6 @@ export default function CheckItem({ text, checked, onToggle }) {
       className="flex items-center gap-2 cursor-pointer"
     >
       {/* 체크박스 */}
-
       <div className="w-6 h-6 border rounded-sm flex items-center justify-center bg-P100 border-P300">
         {checked && (
           <svg
@@ -22,7 +21,6 @@ export default function CheckItem({ text, checked, onToggle }) {
 
       {/* 텍스트 */}
       <span
-
         className={`font-medium text-base ${
           checked ? "line-through text-G200" : "text-gray-700"
         }`}

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import OnEye from "../../assets/OnEye.png";
-import OffEye from "../../assets/OffEye.png";
+import OnEye from "../../assets/OnEye.svg";
+import OffEye from "../../assets/OffEye.svg";
 
 export function Password({children}) {
   const [show, setShow] = useState(false);

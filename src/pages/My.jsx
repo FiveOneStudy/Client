@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import profileIcone from '../assets/profile.png';
-import mailIcone from '../assets/mail.png';
-import menuIcon from '../assets/menu.png';
+import profileIcone from '../assets/profile.svg';
+import mailIcone from '../assets/mail.svg';
+import menuIcon from '../assets/menu.svg';
 
 const CERTIFICATES = [
   {

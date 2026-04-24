@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
+
 import logo from '../assets/logo.png';
 import bellIcon from '../assets/bell.png';
 import SearchBar from '../components/SearchBar';
 import searchIcon from '../assets/search.svg';
-
+import logo from '../assets/logo.svg';
+import searchIcon from '../assets/search.svg';
+import bellIcon from '../assets/bell.svg';
 
 const NAV_LINKS = [
   { to: '/main', label: 'MAIN' },
@@ -43,9 +46,6 @@ export function Nav() {
           <Link to="/main">
             <img src={logo} alt="logo" className="h-[50px]" />
           </Link>
-
-          {/* ✅ SearchBar 하나만 */}
-          <SearchBar />
         </div>
 
         {/* 오른쪽 */}
@@ -99,5 +99,4 @@ function SearchBar() {
       </button>
     </div>
   );
-
 }
