@@ -5,7 +5,9 @@ import { Login } from './pages/auth/Login.jsx';
 import { SignUp } from './pages/auth/SignUp.jsx';
 import { FindPassword } from './pages/auth/FindPassword.jsx';
 import { PasswordReset } from './pages/auth/PasswordReset.jsx';
+import { MyStudy } from './pages/MyStudy.jsx';
 import { My } from './pages/My.jsx';
+import { Main } from './pages/Main.jsx';
 import { Plan } from "./pages/Plan.jsx";
 import { Community } from './pages/community/Community.jsx';
 import { Popularity } from './pages/community/Popularity.jsx';
@@ -21,6 +23,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/main" element={<Main />} />
+        <Route path="/study" element={<MyStudy />} />
         <Route path="/findpassword" element={<FindPassword />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
       </Routes>

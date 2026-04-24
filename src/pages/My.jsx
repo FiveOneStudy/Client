@@ -101,7 +101,7 @@ export function My() {
               className="h-[156px] object-contain"
             />
             <div className="mt-3 text-[26px] font-semibold">이름</div>
-            <div className="mt-3 mb-8 px-5 py-1 bg-gray-200 rounded-[4px] flex items-center gap-2">
+            <div className="mt-3  mb-8 px-5 py-1 bg-gray-200 rounded-[4px] flex items-center gap-2">
               <img
                 src={mailIcone}
                 alt="mail"
