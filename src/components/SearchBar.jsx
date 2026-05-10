@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import searchIcon from '../assets/search.png';
+import searchIcon from '../assets/search.svg';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
@@ -107,7 +107,7 @@ export default function SearchBar() {
                   onClick={() => setActiveTab('study')}
                   className={`flex justify-center w-[30%] pb-2 cursor-pointer ${
                     activeTab === 'study'
-                      ? 'text-[#F5AFAF] border-b-2 border-[#F5AFAF]'
+                      ? 'text-P400 border-b-2 border-P400'
                       : 'text-gray-400'
                   }`}
                 >
@@ -118,7 +118,7 @@ export default function SearchBar() {
                   onClick={() => setActiveTab('community')}
                   className={`flex justify-center w-[70%] pb-2 cursor-pointer ${
                     activeTab === 'community'
-                      ? 'text-[#F5AFAF] border-b-2 border-[#F5AFAF]'
+                      ? 'text-P400 border-b-2 border-P400'
                       : 'text-gray-400'
                   }`}
                 >
@@ -135,13 +135,13 @@ export default function SearchBar() {
                     </div>
                     <button
                       onClick={() => navigate('/study')}
-                      className="bg-[#F5AFAF] text-white text-sm px-3 py-1 rounded"
+                      className="bg-P400 text-white text-sm px-3 py-1 rounded"
                     >
                       입장하기
                     </button>
                   </div>
 
-                  <div className="text-xs text-[#F5AFAF] mb-2">
+                  <div className="text-xs text-P400 mb-2">
                     합격자 후기 & TIP
                   </div>
 

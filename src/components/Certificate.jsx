@@ -1,4 +1,4 @@
-import profileIcon from '../assets/profile.png';
+import profileIcon from '../assets/profile.svg';
 
 const CERTIFICATES = [
   '컴퓨터활용능력 1급',
@@ -11,7 +11,7 @@ export default function Certificate() {
     <div className="w-[260px] h-full relative flex flex-col items-center pt-6">
 
       {/* 🔥 세로 라인 (왼쪽 이동 + 길이 확장) */}
-      <div className="absolute -left-4 top-4 bottom-[-185px] w-[2px] bg-[#F9DFDF]" />
+      <div className="absolute -left-4 top-4 bottom-[-185px] w-[2px] bg-P300" />
 
       {/* 프로필 */}
       <img

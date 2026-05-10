@@ -16,7 +16,7 @@ export function Main() {
           <MyStudy />
 
           {/* 하단 */}
-          <div className="flex gap-6">
+          <div className="flex gap-12">
 
             {/* CALENDAR */}
             <div className="flex flex-col">

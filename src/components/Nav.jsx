@@ -3,12 +3,8 @@ import { NavLink, Link } from 'react-router-dom';
 
 
 
-import logo from '../assets/logo.png';
-import bellIcon from '../assets/bell.png';
-import SearchBar from '../components/SearchBar';
 import searchIcon from '../assets/search.svg';
 import logo from '../assets/logo.svg';
-import searchIcon from '../assets/search.svg';
 import bellIcon from '../assets/bell.svg';
 
 const NAV_LINKS = [
@@ -39,7 +35,7 @@ export function Nav() {
   }, []);
 
   return (
-    <nav className="w-full h-[70px] bg-[#F5AFAF] border-b border-[#B88383] flex justify-center sticky top-0 z-50">
+    <nav className="w-full h-[70px] bg-P400 border-b border-[#B88383] flex justify-center sticky top-0 z-50">
       <div className="w-full max-w-[1360px] flex items-center justify-between px-6">
 
         {/* 왼쪽 */}
@@ -47,6 +43,8 @@ export function Nav() {
           <Link to="/main">
             <img src={logo} alt="logo" className="h-[50px]" />
           </Link>
+
+          <SearchBar />
         </div>
 
         {/* 오른쪽 */}

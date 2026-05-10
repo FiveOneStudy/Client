@@ -23,7 +23,7 @@ export default function Calendar() {
   for (let i = 1; i <= lastDate; i++) days.push(i);
 
   return (
-    <div className="h-full flex flex-col w-[400px]">
+    <div className="h-full flex flex-col w-[420px]">
 
       {/* 상단 월 이동 */}
       <div className="flex justify-center items-center gap-4 mb-2 text-sm">

@@ -15,11 +15,12 @@ import { Recent } from './pages/community/Recent.jsx';
 import { Mypost } from './pages/community/Mypost.jsx';
 import { Mycomment } from './pages/community/Mycomment.jsx';
 import { Write } from './pages/community/Write.jsx'
+import MyStudyPage from "./pages/community/MyStudyPage";
 
 function App() {
   return (
     <BrowserRouter>
-
+    <Nav />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
@@ -28,7 +29,6 @@ function App() {
         <Route path="/findpassword" element={<FindPassword />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
       </Routes>
-      <Nav />
       <Routes>
         <Route path="/my" element={<My />} />
         <Route path="/plan" element={<Plan />} />
@@ -38,6 +38,7 @@ function App() {
         <Route path='/community/mypost' element={<Mypost/>} />
         <Route path='/community/mycomment' element={<Mycomment/>} />
         <Route path='/community/write' element={<Write/>} />
+        <Route path="/mystudy/:id" element={<MyStudyPage />} />
       </Routes>
     </BrowserRouter>
   );
