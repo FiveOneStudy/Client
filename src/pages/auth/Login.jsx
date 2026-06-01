@@ -10,13 +10,25 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-const handleLogin = async () => {
-  
+  const handleLogin = async () => {
+    if (!email.trim()) {
+      alert("이메일을 입력해주세요.");
+      return;
+    }
+
+    if (!password.trim()) {
+      alert("비밀번호를 입력해주세요.");
+      return;
+    }
+
     try {
       const response = await login(email, password);
+
       localStorage.setItem("accessToken", response.data.accessToken);
-      console.log("로그인 성공:", {email, password});
-      navigate("/main"); // 로그인 성공 시 이동
+
+      console.log("로그인 성공:", { email, password });
+
+      navigate("/main");
     } catch (error) {
       console.error("로그인 실패:", error);
     }
@@ -25,7 +37,6 @@ const handleLogin = async () => {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="flex flex-col w-96 h-[500px]">
-
         {/* 위 영역 */}
         <div>
           <h1 className="text-2xl font-bold text-center mb-16 tracking-tight font-pretendard">
@@ -72,7 +83,6 @@ const handleLogin = async () => {
             </Link>
           </div>
         </div>
-
       </div>
     </div>
   );
