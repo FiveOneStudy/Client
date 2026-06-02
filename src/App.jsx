@@ -16,6 +16,7 @@ import { Recent } from './pages/community/Recent.jsx';
 import { Mypost } from './pages/community/Mypost.jsx';
 import { Mycomment } from './pages/community/Mycomment.jsx';
 import { Write } from './pages/community/Write.jsx';
+import { Main } from './pages/Main.jsx';
 
 // Nav가 필요한 페이지용 레이아웃
 function MainLayout() {
@@ -41,7 +42,8 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/my" element={<My />} />
           <Route path="/plan" element={<Plan />} />
-
+          
+          <Route path="/main" element={<Main />} />
           <Route path="/community" element={<Community />} />
           <Route path="/community/popularity" element={<Popularity />} />
           <Route path="/community/recent" element={<Recent />} />
