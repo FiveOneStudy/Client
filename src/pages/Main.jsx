@@ -20,7 +20,7 @@ export function Main() {
 
             {/* CALENDAR */}
             <div className="flex flex-col">
-              <div className="text-[14px] font-semibold mb-2">
+              <div className="text-[20px] font-semibold mb-2 -mt-4">
                 CALENDER
               </div>
               <Calendar />

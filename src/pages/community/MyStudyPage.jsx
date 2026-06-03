@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import profileSvg from "../../assets/profile.svg";
 
 
 const members = [
-  { name: "주예진", percent: 80 },
+  { name: "주여진", percent: 80 },
   { name: "함성우", percent: 60 },
   { name: "정하진", percent: 45 },
-  { name: "이시준", percent: 70 },
-  { name: "이시화", percent: 30 },
-  { name: "한성우", percent: 55 },
-  { name: "송현영", percent: 20 },
-  { name: "에환선", percent: 40 },
+  { name: "이서준", percent: 70 },
+  { name: "이서희", percent: 30 },
+  { name: "함성우", percent: 55 },
+  { name: "송정연", percent: 20 },
+  { name: "이서희", percent: 40 },
 ];
 
 const topics = [
@@ -31,20 +32,7 @@ const tipPosts = [
     author: "작성자",
     date: "2026.03.30",
     content: `다들 컴활 어떻게 공부하고 계신가요...ㅠㅠ
-지금 공부한지 2달 되어 가는데 제가 하는 공부법이 맞는지 잘 모르겠어요ㅠㅠㅠ
-
-저는 하루에 거의 5~6시간씩 하고 간간 독서실 가서 공부하거든요..
-일단 개념은 어느정도 다 봤고 모의고사 풀고 있습니다!
-
-이 정도 공부하면 되겠지 싶어서 접수하고 실기 봤는데.. 50점도 못 넘었어요,,,
-
-저만 이런가요?
-제 공부법이 이상한건가요,,,
-
-다들 어떻게 공부하시는지 알려주세요!!!!!
-
-참고로 필기는 1트에 땄어요,,!
-댓글 많이 써주세요....................🖤`,
+지금 공부한지 2달 되어 가는데 제가 하는 공부법이 맞는지 잘 모르겠어요ㅠㅠㅠ`,
   },
   {
     title: "한국사 공부법",
@@ -95,8 +83,8 @@ function ProgressBar({ percent }) {
     <div
       className="relative w-full h-[27px] rounded-full overflow-hidden border-[2px]"
       style={{
-        backgroundColor: "#F9DFDF",
-        borderColor: "#F9DFDF",
+        backgroundColor: "P300",
+        borderColor: "P300",
       }}
     >
       <div
@@ -169,7 +157,7 @@ function CheckItem({ text, checked, onToggle }) {
 
 export default function MyStudyPage() {
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("TIPS");
   const [topicSearch, setTopicSearch] = useState("");
   const [selectedPost, setSelectedPost] = useState(null);
@@ -206,9 +194,12 @@ export default function MyStudyPage() {
     <div className="flex">
       {/* ================= 좌측 사이드 ================= */}
       <div className="w-[220px] h-[705px] border-r border-G200 shrink-0">
-        <div className="p-4 text-[14px] font-semibold border-b border-G200">
-          &lt; STUDY
-        </div>
+        <div
+  onClick={() => navigate("/study")}
+  className="p-4 text-[14px] font-semibold border-b border-G200 cursor-pointer"
+>
+  &lt; STUDY
+</div>
 
         {/* TIPS */}
         <div
@@ -288,13 +279,13 @@ export default function MyStudyPage() {
         {activeTab === "TIPS" && (
           <>
             {!selectedPost ? (
-              <div className="ml-8 max-w-[1000px] px-8 pt-14">
+              <div className="w-full px-8 pt-14">
 
                 {/* 상단 */}
                 <div className="mb-8 flex items-center gap-2">
 
                   {/* 제목 */}
-                  <div className="inline-flex items-end gap-2 border-b-2 border-G500 pb-[2px]">
+                  <div className="inline-flex items-end gap-2 border-b-2 border-G500 pb-[2px] ml-10">
                     <span className="text-[26px] font-bold leading-none">
                       한능검
                     </span>
@@ -331,42 +322,50 @@ export default function MyStudyPage() {
 
                 </div>
 
-                <div className="grid grid-cols-4 gap-7 mt-24 ml-20">
-                  {tipPosts.map((post, i) => (
-                    <div
-                      key={i}
-                      onClick={() => setSelectedPost(post)}
-                      className="cursor-pointer hover:scale-[1.02] transition-all"
-                    >
-                      <div className="w-full h-[120px] rounded-[10px] flex items-center justify-center border border-[#E5E5E5] bg-white">
-                        <span className="text-gray-400 text-[10px]">
-                          이미지
-                        </span>
-                      </div>
+               <div className="flex justify-center w-full mt-24">
+ <div className="flex justify-center w-full -mt-10">
+  <div className="grid grid-cols-4 gap-7">
+    {tipPosts.map((post, i) => (
+      <div
+        key={i}
+        onClick={() => setSelectedPost(post)}
+        className="cursor-pointer hover:scale-[1.02] transition-all w-[180px]"
+      >
+        <div className="w-full h-[120px] rounded-[10px] flex items-center justify-center border border-[#E5E5E5] bg-white">
+          <span className="text-gray-400 text-[10px]">
+            이미지
+          </span>
+        </div>
 
-                      <div className="text-[11px] text-[#4E4F51] mt-2">
-                        {post.author}
-                      </div>
+        <div className="text-[11px] text-[#4E4F51] mt-2">
+          {post.author}
+        </div>
 
-                      <div className="flex justify-between items-center mt-1 border-b border-G200 pb-1">
-                        <div className="text-[17px] truncate">
-                          {post.title}
-                        </div>
-                        <div className="text-[10px] text-G500">
-                          {post.date}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+        <div className="flex justify-between items-center mt-1 border-b border-G200 pb-1">
+          <div className="text-[17px] truncate">
+            {post.title}
+          </div>
+
+          <div className="text-[10px] text-G500">
+            {post.date}
+          </div>
+        </div>
+      </div>
+      
+    ))}
+    </div>
+    </div>
+  </div>
+</div>
+
             ) : (
         
-  <div className="w-full flex justify-center pt-10 px-10">
+  <div className="w-full flex justify-center pt-10 px-10"
+  onClick={() => setShowPostMenu(false)}>
   <div className="w-full max-w-[800px]">
 
                   <div
-                    className="text-[11px] text-[#666] mb-4 cursor-pointer"
+                    className="text-[15px] text-[#666] mb-4 cursor-pointer"
                     onClick={() => setSelectedPost(null)}
                   >
                     &lt; 되돌아가기
@@ -374,14 +373,17 @@ export default function MyStudyPage() {
 
                   {/* 제목 + 점 3개 */}
                   <div className="flex items-start justify-between">
-                    <div className="text-[42px] font-bold text-[#222]">
+                    <div className="text-[36px] font-bold text-[#222]">
                       {selectedPost.title}
                     </div>
 
                     {/* 점 3개 버튼 */}
 <div className="relative mt-3">
   <button
-    onClick={() => setShowPostMenu((prev) => !prev)}
+    onClick={(e) => {
+      e.stopPropagation();
+      setShowPostMenu((prev) => !prev);
+    }}
     className="flex items-center justify-center gap-[5px] p-2"
   >
     <span className="w-[4px] h-[4px] rounded-full bg-[#888]" />
@@ -405,12 +407,12 @@ export default function MyStudyPage() {
 </div>
                   </div>
                   <div className="flex items-center gap-3 mt-5">
-                    <Avatar size={34} />
+                    <Avatar size={36} />
                     <div>
-                      <div className="text-[12px] font-semibold">
+                      <div className="text-[15px] font-semibold">
                         {selectedPost.author}
                       </div>
-                      <div className="text-[10px] text-[#999]">
+                      <div className="text-[13px] text-[#999]">
                         {selectedPost.date} 조회
                       </div>
                     </div>
@@ -459,7 +461,7 @@ export default function MyStudyPage() {
             <div className="w-[800px]">
 
               <div
-                className="text-[11px] text-[#666] mb-2 cursor-pointer"
+                className="text-[16px] text-[#666] mb-2 cursor-pointer"
                 onClick={() => setActiveTab("TIPS")}
               >
                 &lt; 되돌아가기
@@ -574,16 +576,43 @@ export default function MyStudyPage() {
         {/* ================= PROGRESS ================= */}
         {activeTab === "PROGRESS" && (
           <div className="ml-8 max-w-[1180px] px-8 pt-14">
-            <div className="mb-10">
-              <div className="inline-flex items-end gap-2 border-b-2 border-G500 pb-[2px]">
-                <span className="text-[26px] font-bold leading-none">
-                  한능검
-                </span>
-                <span className="text-[13px] leading-none">
-                  STUDY
-                </span>
-              </div>
-            </div>
+           <div className="mb-10 flex items-center gap-2">
+
+  <div className="inline-flex items-end gap-2 border-b-2 border-G500 pb-[2px]">
+    <span className="text-[26px] font-bold leading-none">
+      한능검
+    </span>
+    <span className="text-[13px] leading-none">
+      STUDY
+    </span>
+  </div>
+
+  <button
+    className="-translate-y-[4px]"
+    onClick={() => setShowExitModal(true)}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-4 h-4 text-black"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M11.983 13.938a1.955 1.955 0 100-3.91 1.955 1.955 0 000 3.91z"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M18.063 13.938a1 1 0 00.2 1.1l.036.036a2 2 0 11-2.829 2.829l-.036-.036a1 1 0 00-1.1-.2 1 1 0 00-.6.92V19a2 2 0 11-4 0v-.051a1 1 0 00-.6-.92 1 1 0 00-1.1.2l-.036.036a2 2 0 11-2.829-2.829l.036-.036a1 1 0 00.2-1.1 1 1 0 00-.92-.6H5a2 2 0 110-4h.051a1 1 0 00.92-.6 1 1 0 00-.2-1.1l-.036-.036a2 2 0 112.829-2.829l.036.036a1 1 0 001.1.2h.001a1 1 0 00.599-.92V5a2 2 0 114 0v.051a1 1 0 00.6.92 1 1 0 001.1-.2l.036-.036a2 2 0 112.829 2.829l-.036.036a1 1 0 00-.2 1.1v.001a1 1 0 00.92.599H19a2 2 0 110 4h-.051a1 1 0 00-.92.6z"
+      />
+    </svg>
+  </button>
+
+</div>
 
             <div className="flex gap-14 items-start">
 

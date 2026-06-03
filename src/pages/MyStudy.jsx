@@ -18,11 +18,11 @@ export function MyStudy() {
           <div className="relative bg-[#FFD6D6] px-8 py-7 rounded-[8px]">
 
             {/* 화살표 */}
-            <button className="absolute -left-2 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-[40px] font-extralight text-white/80">
+            <button className="absolute -left-1 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-[40px] font-extralight text-white/80">
               &lt;
             </button>
 
-            <button className="absolute -right-2 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-[40px] font-extralight text-white/80">
+            <button className="absolute -right-1 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-[40px] font-extralight text-white/80">
               &gt;
             </button>
 
@@ -32,19 +32,27 @@ export function MyStudy() {
 
                 {[1, 2, 3, 4, 5, 6].map((_, i) => (
                   <div
-                    key={i}
-                    className="bg-[#F5F5F5] w-[200px] h-[135px] rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center"
-                  >
-                    <div className="text-[18px] text-[#4E4F51] font-semibold">한능검</div>
-                    <div className="text-[26px] font-bold mt-1">D-100</div>
+  key={i}
+  className="relative bg-[#FFFFFF] w-[200px] h-[135px] rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+>
+  {/* 자격증명 */}
+  <div className="absolute top-[18px] left-1/2 -translate-x-1/2 text-[18px]  font-semibold">
+    한능검
+  </div>
 
-                    <button
-                      onClick={() => navigate(`/mystudy/${i}`)}
-                      className="mt-3 w-[70%] h-[24px] text-[11px] bg-[#EFAAAA] text-white rounded-[6px]"
-                    >
-                      입장하기
-                    </button>
-                  </div>
+  {/* D-Day */}
+  <div className="absolute top-[48px] left-1/2 -translate-x-1/2 text-[26px] font-bold">
+    D-100
+  </div>
+
+  {/* 버튼 */}
+  <button
+    onClick={() => navigate(`/mystudy/${i}`)}
+    className="absolute bottom-[10px] left-1/2 -translate-x-1/2 w-[70%] h-[22px] mt-1 text-[11px] bg-[#EFAAAA] text-white rounded-[6px]"
+  >
+    입장하기
+  </button>
+</div>
                 ))}
 
               </div>
@@ -75,9 +83,9 @@ export function MyStudy() {
               {[1, 2, 3, 4, 5, 6, 7].map((_, i) => (
                 <div
                   key={i}
-                  className="h-[48px] flex items-center justify-between bg-[#FFFFFF] px-4 rounded-[6px]"
+                  className="h-[46px] flex items-center justify-between bg-[#FFFFFF] px-4 rounded-[6px]"
                 >
-                  <span className="text-[11px] text-gray-700">
+                  <span className="text-[12px] font-bold text-gray-700">
                     {i % 3 === 0 ? "한능검" : i % 3 === 1 ? "SQLD" : "정보처리기능사"}
                   </span>
 
@@ -88,7 +96,7 @@ export function MyStudy() {
               ))}
             </div>
 
-            <div className="text-center text-[11px] pb-2">&lt; 1 &gt;</div>
+            <div className="text-center text-[11px] pb-3">&lt; 1 &gt;</div>
           </div>
         </div>
       </div>
@@ -96,7 +104,7 @@ export function MyStudy() {
       {/* ================= 입력 모달 ================= */}
       {open && (
         <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
-          <div className="w-[380px] bg-[#F3F3F3] rounded-[20px] px-8 py-7 shadow-xl">
+          <div className="w-[380px] bg-[#FFFFFF] rounded-[20px] px-8 py-7 shadow-xl">
 
             <div className="text-center text-[20px] font-semibold mb-6">
               STUDY 추가 요청
