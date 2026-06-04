@@ -1,39 +1,51 @@
+import dropdownImg from "../assets/dropdown.svg";
+
 export default function MyStudy() {
   return (
     <div>
-      <div className="text-[16px] font-semibold mb-2">MY STUDY</div>
+      <div className="text-[16px] font-semibold mb-2">
+        MY STUDY
+      </div>
 
-      <div className="relative bg-[#FFD6D6] px-6 py-5 rounded-[12px]  w-[960px] h-[170px]">
+      <div className="relative bg-[#FFD6D6] px-6 py-5 rounded-[12px] w-[960px] h-[170px]">
 
-        {/* 왼쪽 화살표 (그대로 유지) */}
-        <button className="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-[40px] font-extralight text-white/80">
-          &lt;
+        {/* 왼쪽 화살표 */}
+        <button className="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center">
+          <img
+            src={dropdownImg}
+            alt="left"
+            className="w-8 h-8 scale-x-[-1] brightness-0 invert"
+          />
         </button>
 
-        {/* 오른쪽 화살표 (그대로 유지) */}
-        <button className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-[40px] font-extralight text-white/80">
-          &gt;
+        {/* 오른쪽 화살표 */}
+        <button className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center">
+          <img
+            src={dropdownImg}
+            alt="right"
+            className="w-8 h-8 brightness-0 invert"
+          />
         </button>
 
         {/* 카드 영역 */}
         <div className="flex gap-9 px-10">
           {[1, 2, 3, 4].map((_, i) => (
-           <div
-  key={i}
-  className="relative bg-white w-[260px] h-[130px] rounded-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
->
-  <div className="absolute top-[15px] left-1/2 -translate-x-1/2 text-[14px]">
-    한능검
-  </div>
+            <div
+              key={i}
+              className="relative bg-white w-[260px] h-[130px] rounded-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+            >
+              <div className="absolute top-[15px] left-1/2 -translate-x-1/2 text-[14px]">
+                한능검
+              </div>
 
-  <div className="absolute top-[40px] left-1/2 -translate-x-1/2 text-[27px] font-bold">
-    D-100
-  </div>
+              <div className="absolute top-[40px] left-1/2 -translate-x-1/2 text-[27px] font-bold">
+                D-100
+              </div>
 
-  <button className="absolute bottom-[12px] left-1/2 -translate-x-1/2 w-[75%] h-[22px] text-[11px] bg-[#F5AFAF] shadow-[0_0_4px_rgba(0,0,0,0.25)] text-white rounded">
-    입장하기
-  </button>
-</div>
+              <button className="absolute bottom-[12px] left-1/2 -translate-x-1/2 w-[75%] h-[22px] text-[11px] bg-[#F5AFAF] shadow-[0_0_4px_rgba(0,0,0,0.25)] text-white rounded">
+                입장하기
+              </button>
+            </div>
           ))}
         </div>
 
