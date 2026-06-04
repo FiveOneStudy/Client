@@ -2,14 +2,16 @@ import { useState } from "react";
 import OnEye from "../../assets/OnEye.svg";
 import OffEye from "../../assets/OffEye.svg";
 
-export function Password({children}) {
+export function Password({ placeholder, value, onChange }) {
   const [show, setShow] = useState(false);
 
   return (
     <div className="relative w-96">
       <input
         type={show ? "text" : "password"}
-        placeholder={children}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         className="
           w-full bg-gray-50 h-card rounded-md 
           border border-gray-400 
