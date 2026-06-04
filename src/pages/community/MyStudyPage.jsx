@@ -83,8 +83,8 @@ function ProgressBar({ percent }) {
     <div
       className="relative w-full h-[27px] rounded-full overflow-hidden border-[2px]"
       style={{
-        backgroundColor: "P300",
-        borderColor: "P300",
+        backgroundColor: "#F5AFAF",
+        borderColor: "#F5AFAF",
       }}
     >
       <div
