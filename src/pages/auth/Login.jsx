@@ -1,41 +1,43 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../../api/auth";
-import axios from "axios";
 import { Button } from "../../components/auth/Button";
 import { Input } from "../../components/auth/Input";
 import { Password } from "../../components/auth/Password";
+import { PopUp } from "../../components/PopUp";  // 추가
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [modalMessage, setModalMessage] = useState("");  // 추가
   const navigate = useNavigate();
+
   const handleLogin = async () => {
     if (!email.trim()) {
-      alert("이메일을 입력해주세요.");
+      setModalMessage("이메일을 입력해주세요.");  // alert 대신
       return;
     }
-
     if (!password.trim()) {
-      alert("비밀번호를 입력해주세요.");
+      setModalMessage("비밀번호를 입력해주세요.");  // alert 대신
       return;
     }
 
     try {
       const response = await login(email, password);
-
       localStorage.setItem("accessToken", response.data.accessToken);
-
-      console.log("로그인 성공:", { email, password });
-
       navigate("/main");
     } catch (error) {
+      setModalMessage("로그인에 실패했습니다.");  // 추가
       console.error("로그인 실패:", error);
     }
   };
 
   return (
     <div className="flex items-center justify-center h-screen">
+      {modalMessage && (
+        <PopUp message={modalMessage} onClose={() => setModalMessage("")} />
+      )}
+
       <div className="flex flex-col w-96 h-[500px]">
         {/* 위 영역 */}
         <div>
@@ -59,10 +61,7 @@ export function Login() {
 
               <div className="text-sm text-gray-600 text-left font-medium font-noto">
                 비밀번호를 잊으셨나요?{" "}
-                <Link
-                  to="/FindPassword"
-                  className="text-P400 font-medium no-underline"
-                >
+                <Link to="/FindPassword" className="text-P400 font-medium no-underline">
                   <b>비밀번호 찾기</b>
                 </Link>
               </div>
