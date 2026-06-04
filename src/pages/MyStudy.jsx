@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import dropdownImg from "../assets/dropdown.svg";
 
 export function MyStudy() {
   const [open, setOpen] = useState(false);
@@ -17,44 +18,48 @@ export function MyStudy() {
 
           <div className="relative bg-[#FFD6D6] px-8 py-7 rounded-[8px]">
 
-            {/* 화살표 */}
-            <button className="absolute -left-1 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-[40px] font-extralight text-white/80">
-              &lt;
+            {/* 왼쪽 화살표 */}
+            <button className="absolute -left-1 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center">
+              <img
+                src={dropdownImg}
+                alt="left"
+                className="w-8 h-8 scale-x-[-1] brightness-0 invert"
+              />
             </button>
 
-            <button className="absolute -right-1 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-[40px] font-extralight text-white/80">
-              &gt;
+            {/* 오른쪽 화살표 */}
+            <button className="absolute -right-1 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center">
+              <img
+                src={dropdownImg}
+                alt="right"
+                className="w-8 h-8 brightness-0 invert"
+              />
             </button>
 
             {/* 카드 중앙 정렬 */}
             <div className="flex justify-center">
               <div className="grid grid-cols-2 gap-6">
-
                 {[1, 2, 3, 4, 5, 6].map((_, i) => (
                   <div
-  key={i}
-  className="relative bg-[#FFFFFF] w-[200px] h-[135px] rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
->
-  {/* 자격증명 */}
-  <div className="absolute top-[18px] left-1/2 -translate-x-1/2 text-[18px]  font-semibold">
-    한능검
-  </div>
+                    key={i}
+                    className="relative bg-[#FFFFFF] w-[200px] h-[135px] rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+                  >
+                    <div className="absolute top-[18px] left-1/2 -translate-x-1/2 text-[18px] font-semibold">
+                      한능검
+                    </div>
 
-  {/* D-Day */}
-  <div className="absolute top-[48px] left-1/2 -translate-x-1/2 text-[26px] font-bold">
-    D-100
-  </div>
+                    <div className="absolute top-[48px] left-1/2 -translate-x-1/2 text-[26px] font-bold">
+                      D-100
+                    </div>
 
-  {/* 버튼 */}
-  <button
-    onClick={() => navigate(`/mystudy/${i}`)}
-    className="absolute bottom-[10px] left-1/2 -translate-x-1/2 w-[70%] h-[22px] mt-1 text-[11px] bg-[#EFAAAA] text-white rounded-[6px]"
-  >
-    입장하기
-  </button>
-</div>
+                    <button
+                      onClick={() => navigate(`/mystudy/${i}`)}
+                      className="absolute bottom-[10px] left-1/2 -translate-x-1/2 w-[70%] h-[22px] mt-1 text-[11px] bg-[#EFAAAA] text-white rounded-[6px]"
+                    >
+                      입장하기
+                    </button>
+                  </div>
                 ))}
-
               </div>
             </div>
           </div>
@@ -86,7 +91,11 @@ export function MyStudy() {
                   className="h-[46px] flex items-center justify-between bg-[#FFFFFF] px-4 rounded-[6px]"
                 >
                   <span className="text-[12px] font-bold text-gray-700">
-                    {i % 3 === 0 ? "한능검" : i % 3 === 1 ? "SQLD" : "정보처리기능사"}
+                    {i % 3 === 0
+                      ? "한능검"
+                      : i % 3 === 1
+                      ? "SQLD"
+                      : "정보처리기능사"}
                   </span>
 
                   <button className="bg-[#EFAAAA] text-white px-3 py-[4px] text-[9px] rounded-[6px]">
@@ -96,7 +105,9 @@ export function MyStudy() {
               ))}
             </div>
 
-            <div className="text-center text-[11px] pb-3">&lt; 1 &gt;</div>
+            <div className="text-center text-[11px] pb-3">
+              &lt; 1 &gt;
+            </div>
           </div>
         </div>
       </div>
