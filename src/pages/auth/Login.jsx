@@ -61,8 +61,8 @@ export function Login() {
 
               <div className="text-sm text-gray-600 text-left font-medium font-noto">
                 비밀번호를 잊으셨나요?{" "}
-                <Link to="/FindPassword" className="text-P400 font-medium no-underline">
-                  <b>비밀번호 찾기</b>
+                <Link to="/passwordreset" className="text-P400 font-medium no-underline">
+                  <b>비밀번호 재설정</b>
                 </Link>
               </div>
             </div>
