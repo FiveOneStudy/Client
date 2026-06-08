@@ -4,7 +4,6 @@ import { Nav } from "./components/Nav.jsx";
 
 import { Login } from "./pages/auth/Login.jsx";
 import { SignUp } from "./pages/auth/SignUp.jsx";
-import { FindPassword } from "./pages/auth/FindPassword.jsx";
 import { PasswordReset } from "./pages/auth/PasswordReset.jsx";
 
 import { Main } from "./pages/Main.jsx";
@@ -37,7 +36,6 @@ function App() {
         {/* Nav 없는 페이지 */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/findpassword" element={<FindPassword />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
 
         {/* Nav 있는 페이지 */}
