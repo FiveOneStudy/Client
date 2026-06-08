@@ -1,6 +1,6 @@
 export function PostTableHeader() {
   return(
-    <div className="inline-flex h-[36px] px-7 justify-between items-center border-t border-[#68696C]">
+    <div className="inline-flex h-[36px] px-7 justify-between items-center border-y border-[#68696C]">
       <div className="w-[720px] h-full flex items-center justify-center bg-white">
         <span className="text-black text-20 font-medium">제목</span>
       </div>

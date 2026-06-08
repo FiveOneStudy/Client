@@ -1,29 +1,23 @@
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { PostTableHeader } from '../../components/community/PostTableHeader'; 
 import { PostList } from '../../components/community/PostList';
 import { UserActionPanel } from '../../components/community/UserActionPanel';
+import { fetchPosts } from '../../api/post.js';
 
 export function Community() { 
-  const posts = [ 
-    { title: "컴퓨터활용능력 1급", date: "2026.03.30", views: 20 }, 
-    { title: "한국사 너무 어려워요", date: "2026.03.30", views: 15 }, 
-    { title: "SQL 공부법", date: "2026.03.30", views: 30 }, 
-    { title: "컴활 필기 공부", date: "2026.03.30", views: 12 }, 
-    { title: "컴활 2급", date: "2026.03.30", views: 9 }, 
-    { title: "정보처리기사", date: "2026.03.30", views: 22 }, 
-    { title: "토익 공부법", date: "2026.03.30", views: 18 }, 
-    { title: "컴퓨터활용능력 1급", date: "2026.03.30", views: 20 }, 
-    { title: "한국사 너무 어려워요", date: "2026.03.30", views: 15 }, 
-    { title: "SQL 공부법", date: "2026.03.30", views: 30 }, 
-    { title: "컴활 필기 공부", date: "2026.03.30", views: 12 }, 
-    { title: "컴활 2급", date: "2026.03.30", views: 9 }, 
-    { title: "정보처리기사", date: "2026.03.30", views: 22 }, 
-    { title: "토익 공부법", date: "2026.03.30", views: 18 }, 
-    { title: "컴퓨터활용능력 1급", date: "2026.03.30", views: 20 }, 
-    { title: "한국사 너무 어려워요", date: "2026.03.30", views: 15 }
-  ];
-
+  const [popularPosts, setPopularPosts] = useState([]);
+  const [recentPosts, setRecentPosts] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchPosts('POPULAR').then(json => {
+      if (json.success) setPopularPosts(json.data.slice(0, 5));
+    });
+    fetchPosts('LATEST').then(json => {
+      if (json.success) setRecentPosts(json.data.slice(0, 5));
+    });
+  }, []);
 
   return( 
     <div className="min-h-[100%] min-w-[100%] pt-[40px] px-[60px] flex flex-row place-content-between">
@@ -31,13 +25,21 @@ export function Community() {
         <div> 
           <div className="w-[1040px] pl-[20px] text-black text-[32px] font-medium" onClick={() => navigate('/community/popularity')}>인기순</div> 
           <PostTableHeader /> 
-          <PostList posts={posts} items={5}/>
+          <PostList 
+            posts={popularPosts} 
+            items={5} 
+            onPostClick={(post) => navigate(`/community/post/${post.postId}?sort=popularity`)}
+          />
         </div> 
 
         <div>
-        <div className="w-[1040px] pl-[20px] text-black text-[32px] font-medium" onClick={() => navigate('/community/recent')}>최신순</div> 
+          <div className="w-[1040px] pl-[20px] text-black text-[32px] font-medium" onClick={() => navigate('/community/recent')}>최신순</div> 
           <PostTableHeader /> 
-          <PostList posts={posts} items={5}/>
+          <PostList 
+            posts={recentPosts} 
+            items={5} 
+            onPostClick={(post) => navigate(`/community/post/${post.postId}?sort=recent`)}
+          />
         </div>
       </div>
 

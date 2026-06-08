@@ -2,7 +2,7 @@ import dropdown from '../../assets/dropdown.svg';
 import { useState } from 'react';
 import { PostListItem } from './PostListItem';
 
-export function PostList({ posts, items }) {
+export function PostList({ posts, items, onPostClick }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = items;
 
@@ -25,14 +25,15 @@ export function PostList({ posts, items }) {
   return(
     <div>
       <div style={{ minHeight: `${minh}px` }}>
-        {currentPosts.map((post, index) => (
-          <PostListItem 
-            key={index}
-            title={post.title}
-            date={post.date}
-            views={post.views}
-          />
-        ))}
+      {currentPosts.map((post, index) => (
+        <PostListItem
+          key={index}
+          title={post.title}
+          createdAt={post.createdAt}
+          viewCount={post.viewCount}
+          onClick={() => onPostClick(post)}
+        />
+      ))}
       </div>
 
       <div className="w-[1040px] h-[40px] flex justify-center items-center border-t border-[#B4B5B7]">
