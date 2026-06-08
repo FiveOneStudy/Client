@@ -18,6 +18,7 @@ import { Recent } from "./pages/community/Recent.jsx";
 import { Mypost } from "./pages/community/Mypost.jsx";
 import { Mycomment } from "./pages/community/Mycomment.jsx";
 import { Write } from "./pages/community/Write.jsx";
+import { Post } from "./pages/community/Post.jsx";
 import MyStudyPage from "./pages/community/MyStudyPage";
 
 // Nav가 포함된 레이아웃
@@ -54,6 +55,7 @@ function App() {
           <Route path="/community/mypost" element={<Mypost />} />
           <Route path="/community/mycomment" element={<Mycomment />} />
           <Route path="/community/write" element={<Write />} />
+          <Route path="/community/post/:id" element={<Post />} />
 
           <Route path="/mystudy/:id" element={<MyStudyPage />} />
         </Route>
