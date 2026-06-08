@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 
-export function AuthCode() {
-  const [time, setTime] = useState(180);
+export function AuthCode({ value, onChange, active, onResend }) {
+  const [time, setTime] = useState(300);
   const [expired, setExpired] = useState(false);
 
   useEffect(() => {
+    if (!active) return;
+    setTime(300);
+    setExpired(false);
+  }, [active]);
+
+  useEffect(() => {
+    if (!active || expired) return;
     if (time <= 0) {
       setExpired(true);
       return;
@@ -15,7 +22,7 @@ export function AuthCode() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [time]);
+  }, [time, active, expired]);
 
   const formatTime = () => {
     const min = String(Math.floor(time / 60)).padStart(2, "0");
@@ -27,6 +34,8 @@ export function AuthCode() {
     <div className="relative w-96">
       <input
         placeholder="인증번호"
+        value={value}        // 추가
+        onChange={onChange}  // 추가
         className="
           w-full bg-gray-50 h-card rounded-md 
           border border-gray-400 
@@ -37,20 +46,20 @@ export function AuthCode() {
         "
       />
 
-      {/* 오른쪽 타이머 */}
       <span
         className={`
           absolute right-5 top-1/2 -translate-y-1/2 text-sm font-medium font-noto
-          ${expired ? "font-bold text-gray-500 cursor-pointer" : "text-P400"}
+          ${!active ? "text-gray-300" : expired ? "font-bold text-gray-500 cursor-pointer" : "text-P400"}
         `}
         onClick={() => {
           if (expired) {
-            setTime(180);
+            setTime(300);
             setExpired(false);
+            onResend?.();
           }
         }}
       >
-        {expired ? "재전송" : formatTime()}
+        {!active ? "00:00" : expired ? "재전송" : formatTime()}
       </span>
     </div>
   );
