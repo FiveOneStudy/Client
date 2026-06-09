@@ -4,37 +4,46 @@ import { Button } from "../../components/auth/Button";
 import { Input } from "../../components/auth/Input";
 import { Password } from "../../components/auth/Password";
 import { PopUp } from "../../components/PopUp";
+import { signup } from "../../api/auth";
 
 export function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [nickname, setNickname] = useState("");
   const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!email.trim()) {
       setModalMessage("이메일을 입력해주세요.");
+      return;
+    }
+    if (!nickname.trim()) {
+      setModalMessage("닉네임을 입력해주세요.");
       return;
     }
     if (!password.trim()) {
       setModalMessage("비밀번호를 입력해주세요.");
       return;
     }
-    if (!confirmPassword.trim()) {
-      setModalMessage("비밀번호 재확인을 입력해주세요.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setModalMessage("비밀번호가 일치하지 않습니다.");
-      return;
-    }
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    console.log("회원가입 데이터:", { email, password });
-    setModalMessage("회원가입이 완료되었습니다!");
+    try {
+      const res = await signup(email, password, nickname);
+      console.log("성공 응답:", res.data);
+
+      // status 205 체크 대신 accessToken 있으면 성공으로 처리
+      if (res.data.accessToken) {
+        localStorage.setItem("accessToken", res.data.accessToken);
+        localStorage.setItem("refreshToken", res.data.refreshToken);
+        setModalMessage("회원가입이 완료되었습니다!");
+      }
+    } catch (error) {
+      if (error.response?.status === 400) {
+        setModalMessage(error.response.data.error.message);
+      } else {
+        setModalMessage("회원가입에 실패했습니다.");
+      }
+    }
   };
 
   const handleModalClose = () => {
@@ -58,6 +67,11 @@ export function SignUp() {
 
           <div className="flex flex-col gap-4 w-full">
             <Input
+              placeholder="이름"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+            <Input
               placeholder="이메일"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -66,11 +80,6 @@ export function SignUp() {
               placeholder="비밀번호"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            />
-            <Password
-              placeholder="비밀번호 재확인"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
         </div>
