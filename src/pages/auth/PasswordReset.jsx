@@ -92,7 +92,7 @@ export function PasswordReset() {
           </div>
         </div>
 
-        <div className="flex flex-col w-full mt-auto mb-[68px] items-center">
+        <div className="flex flex-col w-full mt-auto mb-[72px] items-center">
           <Button className="w-full" onClick={handleButton}>
             {buttonLabel}
           </Button>

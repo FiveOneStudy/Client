@@ -84,7 +84,7 @@ export function SignUp() {
           </div>
         </div>
 
-        <div className="flex flex-col w-full mt-16 items-center">
+        <div className="flex flex-col w-full mt-[61px] items-center">
           <Button className="w-full mb-4" onClick={handleSubmit}>
             회원가입
           </Button>

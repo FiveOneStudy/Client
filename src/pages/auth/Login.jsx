@@ -4,21 +4,21 @@ import { login } from "../../api/auth";
 import { Button } from "../../components/auth/Button";
 import { Input } from "../../components/auth/Input";
 import { Password } from "../../components/auth/Password";
-import { PopUp } from "../../components/PopUp";  // 추가
+import { PopUp } from "../../components/PopUp"; // 추가
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [modalMessage, setModalMessage] = useState("");  // 추가
+  const [modalMessage, setModalMessage] = useState(""); // 추가
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!email.trim()) {
-      setModalMessage("이메일을 입력해주세요.");  // alert 대신
+      setModalMessage("이메일을 입력해주세요."); // alert 대신
       return;
     }
     if (!password.trim()) {
-      setModalMessage("비밀번호를 입력해주세요.");  // alert 대신
+      setModalMessage("비밀번호를 입력해주세요."); // alert 대신
       return;
     }
 
@@ -27,7 +27,7 @@ export function Login() {
       localStorage.setItem("accessToken", response.data.accessToken);
       navigate("/main");
     } catch (error) {
-      setModalMessage("로그인에 실패했습니다.");  // 추가
+      setModalMessage("로그인에 실패했습니다."); // 추가
       console.error("로그인 실패:", error);
     }
   };
@@ -52,7 +52,7 @@ export function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <Password
                 placeholder="비밀번호"
                 value={password}
@@ -61,7 +61,10 @@ export function Login() {
 
               <div className="text-sm text-gray-600 text-left font-medium font-noto">
                 비밀번호를 잊으셨나요?{" "}
-                <Link to="/passwordreset" className="text-P400 font-medium no-underline">
+                <Link
+                  to="/passwordreset"
+                  className="text-P400 font-medium no-underline"
+                >
                   <b>비밀번호 재설정</b>
                 </Link>
               </div>
@@ -71,7 +74,9 @@ export function Login() {
 
         {/* 아래 영역 */}
         <div className="flex flex-col w-full mt-28 items-center">
-          <Button className="w-full mb-4" onClick={handleLogin}>
+          <Button className="w-full mb-1" onClick={handleLogin}>
+            {" "}
+            {/* mb-4 → mb-2 */}
             로그인
           </Button>
 
