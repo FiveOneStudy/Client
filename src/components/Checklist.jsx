@@ -1,66 +1,51 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import CheckItem from "./CheckItem";
+import { useNavigate } from 'react-router-dom';
+import CheckItem from './CheckItem';
+import { usePlan } from '../context/Plancontext';
+import { completeCheck } from '../api/PlanAPI';
 
 export default function Checklist() {
   const navigate = useNavigate();
+  const { checkList, syncFromResponse, loadByDate } = usePlan();
 
-  const [items, setItems] = useState([
-    { text: "최태성 16강 시청", done: false },
-    { text: "한국사 2025 모의 시험", done: false },
-    { text: "문제 100개 풀기", done: false },
-    { text: "CBT 90점 달성하기", done: false },
-    { text: "SQLD 챕터3 끝내기", done: false },
-    { text: "정하진이랑 놀기", done: false },
-    { text: "CBT 80점 달성하기", done: true },
-    { text: "최태성 15강 시청", done: true },
-  ]);
+  // 오늘 날짜
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-  const toggleItem = (index) => {
-    const newItems = [...items];
+  const sorted = [...checkList].sort((a, b) => Number(a.completed) - Number(b.completed));
 
-    newItems[index].done = !newItems[index].done;
-
-    // 미완료 먼저, 완료된 항목은 아래로
-    newItems.sort((a, b) => Number(a.done) - Number(b.done));
-
-    setItems(newItems);
+  const handleToggle = async (item) => {
+    const data = await completeCheck(dateStr, item.content);
+    syncFromResponse(data);
   };
 
   return (
     <div className="w-[490px] h-[270px]">
       <div className="border border-red-300 rounded-lg p-5 bg-white w-full h-full">
         <h2
-          onClick={() => navigate("/plan")}
+          onClick={() => navigate('/plan')}
           className="font-bold text-[#563D3D] mb-4 cursor-pointer hover:opacity-70"
         >
           CHECK LIST
         </h2>
-
         <div className="flex h-[calc(100%-32px)]">
-          {/* 왼쪽 */}
           <div className="flex-1 space-y-3">
-            {items.slice(0, 5).map((item, idx) => (
+            {sorted.slice(0, 5).map((item, idx) => (
               <CheckItem
-                key={item.text}
-                text={item.text}
-                checked={item.done}
-                onToggle={() => toggleItem(idx)}
+                key={idx}
+                text={item.content}
+                checked={item.completed}
+                onToggle={() => handleToggle(item)}
               />
             ))}
           </div>
-
-          {/* 가운데 선 */}
           <div className="w-px bg-gray-300 mx-5"></div>
-
-          {/* 오른쪽 */}
           <div className="flex-1 space-y-3">
-            {items.slice(5).map((item, idx) => (
+            {sorted.slice(5).map((item, idx) => (
               <CheckItem
-                key={item.text}
-                text={item.text}
-                checked={item.done}
-                onToggle={() => toggleItem(idx + 5)}
+                key={idx + 5}
+                text={item.content}
+                checked={item.completed}
+                onToggle={() => handleToggle(item)}
               />
             ))}
           </div>
