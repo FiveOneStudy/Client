@@ -1,84 +1,34 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react';
+import { usePlan } from '../context/Plancontext';
+import {
+  insertMonth, updateMonth, deleteMonth,
+  insertCheck, modifyCheck, completeCheck, deleteCheck,
+} from '../api/PlanAPI';
+import CheckItem from '../components/CheckItem';
+import MoreMenu from '../components/plan/MoreMenu';
+import { PlusButton } from '../components/plan/PlusButton';
 import UpIcon from "../assets/up.svg";
 import DownIcon from "../assets/down.svg";
-import CheckItem from "../components/CheckItem";
-import MoreMenu from "../components/plan/MoreMenu";
-import { PlusButton } from "../components/plan/PlusButton";
 
-/* ================== Mock 데이터 ================== */
-
-const mockData = {
-  "2026-06-08": {
-    plans: ["SQLD 시험", "알고리즘 과제"],
-    checkList: [
-      { id: 1, text: "챕터3 끝내기", completed: false },
-      { id: 2, text: "모의고사 풀기", completed: true },
-    ],
-  },
-  "2026-06-10": {
-    plans: ["면접 준비"],
-    checkList: [
-      { id: 3, text: "자기소개서 수정", completed: false },
-    ],
-  },
-};
-
-/* ================== Plan ================== */
-
+/* ================== Plan (페이지 진입점) ================== */
 export function Plan() {
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
-  const [monthPlans, setMonthPlans] = useState([]);
-  const [todos, setTodos] = useState([]);
-  const [checklist, setChecklist] = useState([]);
-
-  const formatDate = (date) =>
-    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-
-  const fetchPlan = (date) => {
-    const key = formatDate(date);
-    const data = mockData[key] ?? { plans: [], checkList: [] };
-
-    setMonthPlans(
-      Object.entries(mockData).map(([d, v]) => ({ date: d, plans: v.plans }))
-    );
-    setTodos(data.plans.map((text) => ({ text, date: date.toDateString() })));
-    setChecklist(
-      data.checkList.map((item) => ({
-        id: item.id,
-        text: item.text,
-        checked: item.completed,
-        date: date.toDateString(),
-      }))
-    );
-  };
-
-  useEffect(() => {
-    fetchPlan(selectedDate);
-  }, [selectedDate]);
 
   return (
     <div className="flex gap-40 justify-center mt-10">
-      <Calendar
+      <PlanCalendar
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
-        monthPlans={monthPlans}
-        formatDate={formatDate}
       />
-      <Schedule
-        selectedDate={selectedDate}
-        todos={todos}
-        setTodos={setTodos}
-        checklist={checklist}
-        setChecklist={setChecklist}
-      />
+      <Schedule selectedDate={selectedDate} />
     </div>
   );
 }
 
-/* ================== Calendar ================== */
-
-function Calendar({ selectedDate, setSelectedDate, monthPlans, formatDate }) {
+/* ================== PlanCalendar ================== */
+function PlanCalendar({ selectedDate, setSelectedDate }) {
+  const { monthPlans } = usePlan();
   const today = new Date();
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -90,16 +40,16 @@ function Calendar({ selectedDate, setSelectedDate, monthPlans, formatDate }) {
   const prevLastDate = new Date(year, month, 0).getDate();
 
   const dates = [];
-  for (let i = firstDay - 1; i >= 0; i--)
-    dates.push({ day: prevLastDate - i, isCurrent: false });
-  for (let i = 1; i <= lastDate; i++)
-    dates.push({ day: i, isCurrent: true });
+  for (let i = firstDay - 1; i >= 0; i--) dates.push({ day: prevLastDate - i, isCurrent: false });
+  for (let i = 1; i <= lastDate; i++) dates.push({ day: i, isCurrent: true });
   let nextDay = 1;
-  while (dates.length % 7 !== 0)
-    dates.push({ day: nextDay++, isCurrent: false });
+  while (dates.length % 7 !== 0) dates.push({ day: nextDay++, isCurrent: false });
 
   const changeMonth = (diff) => setCurrentDate(new Date(year, month + diff, 1));
   const isSelectedToday = selectedDate.toDateString() === today.toDateString();
+
+  const formatDate = (date) =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
   return (
     <div className="w-[600px] h-[590px] border border-G300 rounded-2xl bg-white overflow-hidden">
@@ -121,7 +71,6 @@ function Calendar({ selectedDate, setSelectedDate, monthPlans, formatDate }) {
             </button>
           </div>
         </div>
-
         <div className="grid grid-cols-7 text-center gap-10 mb-[-17px] text-gray-400">
           {["일", "월", "화", "수", "목", "금", "토"].map((d) => <div key={d}>{d}</div>)}
         </div>
@@ -181,132 +130,133 @@ function Calendar({ selectedDate, setSelectedDate, monthPlans, formatDate }) {
 }
 
 /* ================== Schedule ================== */
+export function Schedule({ selectedDate }) {
+  const { planList, checkList, loadByDate, syncFromResponse } = usePlan();
 
-export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklist }) {
-  const [showInput, setShowInput] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [menuIndex, setMenuIndex] = useState(null);
+  const dateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
 
-  const [checkInput, setCheckInput] = useState("");
-  const [showCheckInput, setShowCheckInput] = useState(false);
+  useEffect(() => {
+    loadByDate(dateStr);
+  }, [dateStr, loadByDate]);
+
+  const [showInput, setShowInput]                 = useState(false);
+  const [inputValue, setInputValue]               = useState('');
+  const [editingIndex, setEditingIndex]           = useState(null);
+  const [menuIndex, setMenuIndex]                 = useState(null);
+  const [showCheckInput, setShowCheckInput]       = useState(false);
+  const [checkInput, setCheckInput]               = useState('');
   const [checkEditingIndex, setCheckEditingIndex] = useState(null);
-  const [checkMenuIndex, setCheckMenuIndex] = useState(null);
+  const [checkMenuIndex, setCheckMenuIndex]       = useState(null);
 
-  const filteredChecklist = checklist
-    .map((item, globalIndex) => ({ ...item, globalIndex }))
-    .filter((item) => item.date === selectedDate.toDateString())
-    .sort((a, b) => a.checked - b.checked);
-
-  const handleAdd = () => {
-    if (inputValue.trim() === "") { setShowInput(false); return; }
-    setTodos([...todos, { text: inputValue, date: selectedDate.toDateString() }]);
-    setInputValue("");
-    setShowInput(false);
+  // ── 일정 ──
+  const handleAdd = async () => {
+    if (!inputValue.trim()) { setShowInput(false); return; }
+    setShowInput(false); // 먼저 닫아서 onBlur 재실행 방지
+    const data = await insertMonth(dateStr, inputValue.trim());
+    syncFromResponse(data);
+    setInputValue('');
   };
 
-  const handleEditSave = (index, newText) => {
-    if (newText.trim() === "") { handleDelete(index); return; }
-    const newTodos = [...todos];
-    newTodos[index] = { ...newTodos[index], text: newText };
-    setTodos(newTodos);
+  const handleEditSave = async (index, newText) => {
+    if (!newText.trim()) { handleDelete(index); return; }
+    const data = await updateMonth(dateStr, planList[index], newText.trim());
+    syncFromResponse(data);
     setEditingIndex(null);
   };
 
-  const handleDelete = (index) => {
-    setTodos(todos.filter((_, i) => i !== index));
+  const handleDelete = async (index) => {
+    const data = await deleteMonth(dateStr, planList[index]);
+    syncFromResponse(data);
     setMenuIndex(null);
   };
 
-  const handleAddCheck = () => {
-    if (checkInput.trim() === "") { setShowCheckInput(false); return; }
-    setChecklist([...checklist, {
-      id: Date.now(),
-      text: checkInput,
-      checked: false,
-      date: selectedDate.toDateString(),
-    }]);
-    setCheckInput("");
-    setShowCheckInput(false);
+  // ── 체크리스트 ──
+  const handleAddCheck = async () => {
+    if (!checkInput.trim()) { setShowCheckInput(false); return; }
+    setShowCheckInput(false); // 먼저 닫아서 onBlur 재실행 방지
+    const data = await insertCheck(dateStr, checkInput.trim());
+    syncFromResponse(data);
+    setCheckInput('');
   };
 
-  const handleCheckEditSave = (globalIndex, newText) => {
-    if (newText.trim() === "") { handleCheckDelete(globalIndex); return; }
-    const newList = [...checklist];
-    newList[globalIndex] = { ...newList[globalIndex], text: newText };
-    setChecklist(newList);
+  const handleCheckEditSave = async (index, newText) => {
+    if (!newText.trim()) { handleCheckDelete(index); return; }
+    const data = await modifyCheck(dateStr, checkList[index].content, newText.trim());
+    syncFromResponse(data);
     setCheckEditingIndex(null);
   };
 
-  const handleCheckDelete = (globalIndex) => {
-    setChecklist(checklist.filter((_, i) => i !== globalIndex));
+  const handleCheckDelete = async (index) => {
+    const data = await deleteCheck(dateStr, checkList[index].content);
+    syncFromResponse(data);
     setCheckMenuIndex(null);
   };
 
-  const handleToggle = (globalIndex) => {
-    const newList = [...checklist];
-    newList[globalIndex] = { ...newList[globalIndex], checked: !newList[globalIndex].checked };
-    setChecklist(newList);
+  const handleToggle = async (index) => {
+    const data = await completeCheck(dateStr, checkList[index].content);
+    syncFromResponse(data);
   };
 
   return (
     <div className="w-[580px] h-[590px] border-2 border-G300 rounded-2xl bg-white flex flex-col">
       <div className="p-6 overflow-auto">
         <div className="font-medium">
-          {selectedDate.getFullYear()}.
-          {String(selectedDate.getMonth() + 1).padStart(2, "0")}.
-          {String(selectedDate.getDate()).padStart(2, "0")}
+          {selectedDate.getFullYear()}. {String(selectedDate.getMonth() + 1).padStart(2, '0')}. {String(selectedDate.getDate()).padStart(2, '0')}
         </div>
 
         {/* 일정 */}
         <h2 className="text-2xl font-medium mt-7">Schedule</h2>
         <ul className="mt-4 mb-4 ml-1">
-          {todos.map((todo, index) => (
+          {planList.map((text, index) => (
             <li key={index} className="flex items-center mb-3">
               <div className="w-[4px] h-5 bg-P400 mr-2 rounded-sm"></div>
               {editingIndex === index ? (
                 <input
                   autoFocus
-                  defaultValue={todo.text}
+                  defaultValue={text}
                   onBlur={(e) => handleEditSave(index, e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") handleEditSave(index, e.target.value);
-                    if (e.key === "Escape") setEditingIndex(null);
+                    if (e.key === 'Enter') handleEditSave(index, e.target.value);
+                    if (e.key === 'Escape') setEditingIndex(null);
                   }}
                   className="w-full outline-none bg-transparent font-medium text-base"
                 />
               ) : (
-                <span className="font-medium text-base flex-1">{todo.text}</span>
+                <span className="font-medium text-base flex-1">{text}</span>
               )}
               <MoreMenu
-                index={index}
-                menuIndex={menuIndex}
+                index={index} menuIndex={menuIndex}
                 setMenuIndex={setMenuIndex}
                 setEditingIndex={setEditingIndex}
                 handleDelete={handleDelete}
               />
             </li>
           ))}
-
           {showInput && (
             <li className="flex items-center mb-2">
               <div className="w-[4px] h-5 bg-P400 mr-2 rounded-sm"></div>
               <input
-                value={inputValue}
-                autoFocus
+                value={inputValue} autoFocus
                 onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={async (e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    await handleAdd();
+                  }
+                  if (e.key === 'Escape') {
+                    setShowInput(false);
+                    setInputValue('');
+                  }
+                }}
                 onBlur={handleAdd}
-                onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
                 className="w-full outline-none bg-transparent font-medium text-base"
                 placeholder="일정을 입력하세요"
               />
             </li>
           )}
         </ul>
-
         <div className="flex items-center gap-2 mb-4 cursor-pointer" onClick={() => setShowInput(true)}>
-          <PlusButton />
-          <div className="text-G500">일정 추가</div>
+          <PlusButton /><div className="text-G500">일정 추가</div>
         </div>
 
         <div className="w-full h-[0.5px] my-2 mb-4 bg-P300"></div>
@@ -314,18 +264,17 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
         {/* 체크리스트 */}
         <h2 className="text-2xl font-medium mb-5">CheckList</h2>
         <ul className="mb-4">
-          {filteredChecklist.map((item) => (
-            <li key={item.globalIndex} className="flex items-center mb-3">
-              {checkEditingIndex === item.globalIndex ? (
+          {checkList.map((item, index) => (
+            <li key={index} className="flex items-center mb-3">
+              {checkEditingIndex === index ? (
                 <>
                   <div className="w-6 h-6 border rounded-sm flex items-center justify-center bg-P100 border-P300 mr-2" />
                   <input
-                    autoFocus
-                    defaultValue={item.text}
-                    onBlur={(e) => handleCheckEditSave(item.globalIndex, e.target.value)}
+                    autoFocus defaultValue={item.content}
+                    onBlur={(e) => handleCheckEditSave(index, e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") handleCheckEditSave(item.globalIndex, e.target.value);
-                      if (e.key === "Escape") setCheckEditingIndex(null);
+                      if (e.key === 'Enter') handleCheckEditSave(index, e.target.value);
+                      if (e.key === 'Escape') setCheckEditingIndex(null);
                     }}
                     className="flex-1 outline-none font-medium text-base"
                   />
@@ -333,41 +282,45 @@ export function Schedule({ selectedDate, todos, setTodos, checklist, setChecklis
               ) : (
                 <div className="flex-1">
                   <CheckItem
-                    text={item.text}
-                    checked={item.checked}
-                    onToggle={() => handleToggle(item.globalIndex)}
+                    text={item.content}
+                    checked={item.completed}
+                    onToggle={() => handleToggle(index)}
                   />
                 </div>
               )}
               <MoreMenu
-                index={item.globalIndex}
-                menuIndex={checkMenuIndex}
+                index={index} menuIndex={checkMenuIndex}
                 setMenuIndex={setCheckMenuIndex}
                 setEditingIndex={setCheckEditingIndex}
-                handleDelete={() => handleCheckDelete(item.globalIndex)}
+                handleDelete={() => handleCheckDelete(index)}
               />
             </li>
           ))}
-
           {showCheckInput && (
             <li className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 border rounded-sm flex items-center justify-center bg-P100 border-P300" />
               <input
-                value={checkInput}
-                autoFocus
+                value={checkInput} autoFocus
                 onChange={(e) => setCheckInput(e.target.value)}
+                onKeyDown={async (e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    await handleAddCheck();
+                  }
+                  if (e.key === 'Escape') {
+                    setShowCheckInput(false);
+                    setCheckInput('');
+                  }
+                }}
                 onBlur={handleAddCheck}
-                onKeyDown={(e) => { if (e.key === "Enter") handleAddCheck(); }}
                 className="outline-none font-medium text-base flex-1"
                 placeholder="계획을 입력하세요"
               />
             </li>
           )}
         </ul>
-
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowCheckInput(true)}>
-          <PlusButton />
-          <div className="text-G500">계획 추가</div>
+          <PlusButton /><div className="text-G500">계획 추가</div>
         </div>
       </div>
     </div>
