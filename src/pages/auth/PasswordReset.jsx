@@ -5,41 +5,62 @@ import { Input } from "../../components/auth/Input";
 import { AuthCode } from "../../components/auth/AuthCode";
 import { Password } from "../../components/auth/Password";
 import { PopUp } from "../../components/PopUp";
-
-const MOCK_EMAIL = "test@test.com";
-const MOCK_CODE = "123456";
+import { sendAuthCode, resetPassword } from "../../api/auth";
 
 export function PasswordReset() {
   const [email, setEmail] = useState("");
   const [authCode, setAuthCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
-
-  const [step, setStep] = useState(1); // 1: 이메일, 2: 인증번호, 3: 새 비밀번호
+  const [step, setStep] = useState(1);
   const [timerActive, setTimerActive] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [sending, setSending] = useState(false);
   const navigate = useNavigate();
 
-  const handleButton = () => {
+  const handleButton = async () => {
     if (step === 1) {
       if (!email.trim()) { setModalMessage("이메일을 입력해주세요."); return; }
-      if (email !== MOCK_EMAIL) { setModalMessage("등록되지 않은 이메일입니다."); return; }
-      console.log("인증코드 발송 (Mock):", MOCK_CODE);
-      setTimerActive(true);
-      setStep(2);
+      if (sending) return;
+
+      setSending(true);
+      try {
+        const res = await sendAuthCode(email);
+        if (res.data.success) {
+          console.log("인증코드 발송 성공:", res.data.data.message);
+          setTimerActive(true);
+          setStep(2);
+        }
+      } catch (error) {
+        if (error.response?.data?.error?.code === "USER_NOT_FOUND") {
+          setModalMessage(error.response.data.error.message);
+        } else {
+          setModalMessage("인증코드 발송에 실패했습니다.");
+        }
+        console.error("인증코드 발송 실패:", error);
+      } finally {
+        setSending(false);
+      }
       return;
     }
 
     if (step === 2) {
       if (!authCode.trim()) { setModalMessage("인증번호를 입력해주세요."); return; }
-      if (authCode !== MOCK_CODE) { setModalMessage("인증번호가 올바르지 않습니다."); return; }
-      setStep(3);
-      return;
-    }
-
-    if (step === 3) {
       if (!newPassword.trim()) { setModalMessage("새 비밀번호를 입력해주세요."); return; }
-      console.log("비밀번호 재설정 (Mock):", newPassword);
-      setModalMessage("비밀번호가 재설정 되었습니다.");
+
+      try {
+        const res = await resetPassword(email, authCode, newPassword);
+        if (res.data.success) {
+          console.log("비밀번호 재설정 성공:", res.data.data.message);
+          setModalMessage("비밀번호가 재설정 되었습니다.");
+        }
+      } catch (error) {
+        if (error.response?.data?.error?.message) {
+          setModalMessage(error.response.data.error.message);
+        } else {
+          setModalMessage("비밀번호 재설정에 실패했습니다.");
+        }
+        console.error("비밀번호 재설정 실패:", error);
+      }
     }
   };
 
@@ -50,7 +71,7 @@ export function PasswordReset() {
     setModalMessage("");
   };
 
-  const buttonLabel = step === 1 ? "인증번호 발송" : step === 2 ? "인증번호 확인" : "완료";
+  const buttonLabel = step === 1 ? "인증번호 발송" : "완료";
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -72,16 +93,20 @@ export function PasswordReset() {
             />
 
             {step >= 2 && (
-              <AuthCode
-                value={authCode}
-                onChange={(e) => setAuthCode(e.target.value)}
-                active={timerActive}
-                onResend={() => console.log("인증코드 재발송 (Mock):", MOCK_CODE)}
-              />
-            )}
-
-            {step >= 3 && (
               <>
+                <AuthCode
+                  value={authCode}
+                  onChange={(e) => setAuthCode(e.target.value)}
+                  active={timerActive}
+                  onResend={async () => {
+                    try {
+                      await sendAuthCode(email);
+                      console.log("인증코드 재발송 성공");
+                    } catch (error) {
+                      console.error("재발송 실패:", error);
+                    }
+                  }}
+                />
                 <Password
                   placeholder="새로운 비밀번호"
                   value={newPassword}
@@ -92,9 +117,9 @@ export function PasswordReset() {
           </div>
         </div>
 
-        <div className="flex flex-col w-full mt-auto mb-[68px] items-center">
-          <Button className="w-full" onClick={handleButton}>
-            {buttonLabel}
+        <div className="flex flex-col w-full mt-auto mb-[72px] items-center">
+          <Button className="w-full" onClick={handleButton} disabled={sending}>
+            {sending ? "발송 중..." : buttonLabel}
           </Button>
         </div>
       </div>
