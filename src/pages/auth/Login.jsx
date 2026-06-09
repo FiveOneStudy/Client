@@ -24,10 +24,19 @@ export function Login() {
 
     try {
       const response = await login(email, password);
-      localStorage.setItem("accessToken", response.data.accessToken);
-      navigate("/main");
+      console.log("로그인 성공:", response.data); // 추가
+
+      if (response.data.accessToken) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        navigate("/main");
+      }
     } catch (error) {
-      setModalMessage("로그인에 실패했습니다."); // 추가
+      if (error.response?.status === 401 || error.response?.status === 400) {
+        setModalMessage(error.response.data.message); // "로그인 실패! 이메일이나 비밀번호를 확인해주세요."
+      } else {
+        setModalMessage("로그인에 실패했습니다.");
+      }
       console.error("로그인 실패:", error);
     }
   };
