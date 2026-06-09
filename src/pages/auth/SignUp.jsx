@@ -14,12 +14,12 @@ export function SignUp() {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    if (!email.trim()) {
-      setModalMessage("이메일을 입력해주세요.");
+     if (!nickname.trim()) {
+      setModalMessage("이름을 입력해주세요.");
       return;
     }
-    if (!nickname.trim()) {
-      setModalMessage("닉네임을 입력해주세요.");
+    if (!email.trim()) {
+      setModalMessage("이메일을 입력해주세요.");
       return;
     }
     if (!password.trim()) {
