@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { PlanProvider } from "./context/Plancontext";
 
 import { Nav } from "./components/Nav.jsx";
 
@@ -20,13 +21,12 @@ import { Write } from "./pages/community/Write.jsx";
 import { Post } from "./pages/community/Post.jsx";
 import MyStudyPage from "./pages/community/MyStudyPage";
 
-// Nav가 포함된 레이아웃
 function MainLayout() {
   return (
-    <>
+    <PlanProvider>
       <Nav />
       <Outlet />
-    </>
+    </PlanProvider>
   );
 }
 
