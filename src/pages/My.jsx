@@ -1,135 +1,216 @@
-import { useState } from 'react';
-import profileIcone from '../assets/profile.svg';
-import mailIcone from '../assets/mail.svg';
-import menuIcon from '../assets/menu.svg';
-
-const CERTIFICATES = [
-  {
-    id: 1,
-    name: '컴퓨터활용능력 1급',
-    number: '0000-000000',
-    badge: '컴활 1급 마스터',
-    color: 'text-red-500 border-red-500',
-  },
-  {
-    id: 2,
-    name: '한국사능력검정시험 1급',
-    number: '0000-000000',
-    badge: '한능검 1급 마스터',
-    color: 'text-green-500 border-green-500',
-  },
-  {
-    id: 3,
-    name: 'SQLD',
-    number: '0000-000000',
-    badge: 'SQLD 마스터',
-    color: 'text-blue-500 border-blue-500',
-  },
-];
-
-function CertificateItem({
-  id,
-  name,
-  number,
-  badge,
-  color,
-  openMenu,
-  onMenuClick,
-}) {
-  return (
-    <div className="flex justify-between items-center px-4 py-2 border-b relative">
-      {/* 왼쪽: 이름 + 번호 */}
-      <div className="flex items-center gap-4">
-        <div className="text-[16px] font-semibold">{name}</div>
-        <div className="text-[12px] text-gray-500">자격증 번호 : {number}</div>
-      </div>
-
-      {/* 오른쪽: 배지 + 메뉴 */}
-      <div className="flex items-center gap-3 relative">
-        <span
-          className={`text-[12px] border px-2 py-0.5 rounded-[4px] ${color}`}
-        >
-          {badge}
-        </span>
-
-        <div className="relative">
-          <button onClick={onMenuClick}>
-            <img src={menuIcon} alt="menu" className="w-3 h-3 object-contain" />
-          </button>
-
-          {openMenu === id && (
-            <div className="absolute top-0 left-full ml-1 bg-white border border-gray-200 rounded-[8px] shadow-lg z-50 min-w-[82px]">
-              <button
-                onClick={() => console.log(`${id} 삭제`)}
-                className="w-full text-center px-4 py-2 text-[14px] text-gray-500 hover:bg-gray-100 rounded-[8px]"
-              >
-                삭제하기
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useState, useEffect, useRef } from 'react';
+import profileIcon from '../assets/profile.svg';
+import { BASE_URL, getToken } from '../api/index';
+import { CertificateList } from '../components/my/CertificateList';
+import { AddCertificateModal } from '../components/my/AddCertificateModal';
+import { DeleteConfirmModal } from '../components/my/DeleteConfirmModal';
 
 export function My() {
   const [openMenu, setOpenMenu] = useState(null);
+  const [nickname, setNickname] = useState('');
+  const [profileImageSrc, setProfileImageSrc] = useState(profileIcon);
+  const [profileImagePath, setProfileImagePath] = useState(null);
+  const [certifications, setCertifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
+  const [imageError, setImageError] = useState('');
+
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    fetchMyInfo();
+  }, []);
+
+  const fetchProfileImage = async (path) => {
+    if (!path) {
+      setProfileImageSrc(profileIcon);
+      return;
+    }
+    try {
+      const res = await fetch(`${BASE_URL}${path}?t=${Date.now()}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error('이미지 로드 실패');
+      const blob = await res.blob();
+      setProfileImageSrc((prev) => {
+        if (prev.startsWith('blob:')) URL.revokeObjectURL(prev);
+        return URL.createObjectURL(blob);
+      });
+    } catch (err) {
+      console.error('프로필 이미지 로드 실패:', err);
+      setProfileImageSrc(profileIcon);
+    }
+  };
+
+  const fetchMyInfo = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/mypage`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNickname(data.data.nickname);
+        setProfileImagePath(data.data.profileImageUrl);
+        fetchProfileImage(data.data.profileImageUrl);
+        setCertifications(data.data.certifications);
+      }
+    } catch (err) {
+      console.error('내 정보 조회 실패:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(
+        `${BASE_URL}/mypage/certifications/${deleteTargetId}`,
+        {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${getToken()}` },
+        },
+      );
+      const data = await res.json();
+      if (data.success) {
+        setCertifications((prev) =>
+          prev.filter((c) => c.id !== deleteTargetId),
+        );
+        setOpenMenu(null);
+      }
+    } catch (err) {
+      console.error('자격증 삭제 실패:', err);
+    } finally {
+      setDeleteTargetId(null);
+    }
+  };
 
   const handleMenuClick = (id) => {
     setOpenMenu((prev) => (prev === id ? null : id));
   };
 
+  const handleProfileImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfileImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setImageError('파일 크기는 5MB 이하여야 합니다.');
+      return;
+    }
+
+    setImageError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const res = await fetch(`${BASE_URL}/mypage/profile-image`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${getToken()}` },
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        fetchProfileImage(profileImagePath);
+      } else {
+        setImageError(data.error?.message || '이미지 변경에 실패했습니다.');
+      }
+    } catch (err) {
+      console.error('이미지 변경 에러:', err);
+      setImageError('서버 오류가 발생했습니다.');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full h-[calc(100vh-80px)] bg-[#FFEEEE] flex items-center justify-center">
+        <div className="text-gray-400 text-sm">불러오는 중...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-[calc(100vh-80px)] bg-[#FFEEEE] flex items-center justify-center overflow-hidden">
       <div className="flex flex-col w-[900px] h-[440px] bg-white rounded-[20px] shadow-[4px_4px_4px_rgba(0,0,0,0.25)]">
-        {/* MY PAGE 헤더 */}
+        {/* 헤더 */}
         <div className="px-6 py-4 border-b flex justify-between items-center">
           <div className="text-[26px] font-bold">MY PAGE</div>
-          <button className="border-2 border-gray-400 px-2 py-0.5 rounded-[10px] text-[16px]">
+          <button
+            onClick={() => setShowModal(true)}
+            className="border-2 border-gray-400 px-2 py-0.5 rounded-[10px] text-[16px]"
+          >
             + 추가
           </button>
         </div>
 
-        {/* 콘텐츠 영역 */}
-        <div className="flex flex-1">
+        {/* 콘텐츠 */}
+        <div className="flex flex-1 overflow-hidden">
           {/* 왼쪽 프로필 */}
           <div className="w-[32%] border-r flex flex-col items-center justify-center bg-[#F8F8F8] rounded-bl-[20px]">
-            <img
-              src={profileIcone}
-              alt="profile"
-              className="h-[156px] object-contain"
-            />
-            <div className="mt-3 text-[26px] font-semibold">이름</div>
-            <div className="mt-3  mb-8 px-5 py-1 bg-gray-200 rounded-[4px] flex items-center gap-2">
+            <div
+              className="relative cursor-pointer group"
+              onClick={handleProfileImageClick}
+            >
               <img
-                src={mailIcone}
-                alt="mail"
-                className="w-5 h-5 object-contain"
+                src={profileImageSrc}
+                alt="profile"
+                className="h-[156px] w-[156px] object-cover rounded-full"
+                onError={(e) => {
+                  e.target.src = profileIcon;
+                }}
               />
-              <span>OOOOO@gmail.com</span>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 rounded-full transition-opacity text-white text-[13px]">
+                수정
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={handleProfileImageChange}
+              />
             </div>
+
+            <div className="mt-3 text-[26px] font-semibold">
+              {nickname || '이름'}
+            </div>
+
+            {imageError && (
+              <p className="mt-1 text-[12px] text-red-500">{imageError}</p>
+            )}
           </div>
 
           {/* 오른쪽 자격증 목록 */}
-          <div className="w-[68%] flex flex-col">
-            <div className="flex justify-center items-center px-2 py-2 border-b">
-              <div className="text-[16px] font-semibold">MY CERTIFICATE</div>
-            </div>
-
-            <div className="flex flex-col">
-              {CERTIFICATES.map((cert) => (
-                <CertificateItem
-                  key={cert.id}
-                  {...cert}
-                  openMenu={openMenu}
-                  onMenuClick={() => handleMenuClick(cert.id)}
-                />
-              ))}
-            </div>
-          </div>
+          <CertificateList
+            certifications={certifications}
+            openMenu={openMenu}
+            onMenuClick={handleMenuClick}
+            onDelete={(id) => setDeleteTargetId(id)}
+          />
         </div>
       </div>
+
+      {/* 자격증 등록 모달 */}
+      {showModal && (
+        <AddCertificateModal
+          onClose={() => setShowModal(false)}
+          onSuccess={fetchMyInfo}
+        />
+      )}
+
+      {/* 삭제 확인 모달 */}
+      {deleteTargetId && (
+        <DeleteConfirmModal
+          onConfirm={handleDelete}
+          onCancel={() => setDeleteTargetId(null)}
+        />
+      )}
     </div>
   );
 }
