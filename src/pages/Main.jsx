@@ -36,7 +36,8 @@ export function Main() {
 
         {/* 오른쪽 */}
         <div className="mt-12 ml-[40px]">
-          <Certificate />
+          <Certif
+          icate />
         </div>
 
       </div>
