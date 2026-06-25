@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import dropdown from '../../assets/dropdown.svg';
 import { WriteUser } from '../../components/community/WriteUser';
 import { createPost, useMyPage } from '../../api/post.js';
@@ -10,6 +10,8 @@ export function Write() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const titleRef = useRef(null);
+  const contentRef = useRef(null);
 
   const today = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -18,16 +20,30 @@ export function Write() {
   }).replaceAll('. ', '.').replace('.', '.');
 
   const handleSubmit = () => {
-    if (!title.trim() || !content.trim()) return;
+    if (!title.trim()) {
+      alert('제목을 입력해주세요.');
+      titleRef.current?.focus();
+      return;
+    }
+    if (!content.trim()) {
+      alert('내용을 입력해주세요.');
+      contentRef.current?.focus();
+      return;
+    }
     if (isSubmitting) return;
-  
+
     setIsSubmitting(true);
-  
+
     createPost({ title, content })
       .then(json => {
         console.log('createPost 응답:', json);
-        if (json.success) navigate(`/community/post/${json.data.postId}`);
+        if (json.success) {
+          navigate(`/community/post/${json.data.postId}`);
+        } else {
+          alert('게시글 등록에 실패했습니다.');
+        }
       })
+      .finally(() => setIsSubmitting(false));
   };
 
   return(
@@ -38,6 +54,7 @@ export function Write() {
       </div>
       <div className="w-[780px] h-[560px] flex flex-col px-[34px] pt-[36px] pb-[16px] rounded-xl shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)] border border-P300">
         <input 
+          ref={titleRef}
           type="text" 
           placeholder="제목"
           value={title}
@@ -46,6 +63,7 @@ export function Write() {
         />
         <WriteUser writer={myPageData?.nickname || ''} createdAt={today} viewCount={'write'}/>
         <textarea 
+          ref={contentRef}
           placeholder="내용"
           value={content}
           onChange={(e) => setContent(e.target.value)}
