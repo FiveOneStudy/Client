@@ -2,12 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import dropdown from '../../assets/dropdown.svg';
 import { WriteUser } from '../../components/community/WriteUser';
-import { createPost } from '../../api/post.js';
+import { createPost, useMyPage } from '../../api/post.js';
 
 export function Write() {
   const navigate = useNavigate();
+  const { myPageData } = useMyPage();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const today = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -17,15 +19,20 @@ export function Write() {
 
   const handleSubmit = () => {
     if (!title.trim() || !content.trim()) return;
-
-    createPost({ title, content }).then(json => {
-      if (json.success) navigate(`/community/post/${json.data.postId}`);
-    });
+    if (isSubmitting) return;
+  
+    setIsSubmitting(true);
+  
+    createPost({ title, content })
+      .then(json => {
+        console.log('createPost 응답:', json);
+        if (json.success) navigate(`/community/post/${json.data.postId}`);
+      })
   };
 
   return(
     <div className="flex flex-col justify-center items-center pt-[32px] gap-[12px]">
-      <div className="w-[780px] flex flex-row gap-1" onClick={() => navigate("/community")}>
+      <div className="w-[780px] flex flex-row gap-1 cursor-pointer" onClick={() => navigate("/community")}>
         <img src={dropdown} className="rotate-180" />
         <div className="text-[14px]">되돌아가기</div>
       </div>
@@ -37,7 +44,7 @@ export function Write() {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full border-none outline-none text-[36px] font-medium"
         />
-        <WriteUser writer={"주여진"} createdAt={today} viewCount={'write'}/>
+        <WriteUser writer={myPageData?.nickname || ''} createdAt={today} viewCount={'write'}/>
         <textarea 
           placeholder="내용"
           value={content}
@@ -46,8 +53,11 @@ export function Write() {
         />
         <button 
           onClick={handleSubmit}
-          className='w-[92px] h-[44px] bg-P400 text-White rounded-[16px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.25)] self-end mt-auto'
-        >올리기</button>
+          disabled={isSubmitting}
+          className='w-[92px] h-[44px] bg-P400 text-White rounded-[16px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.25)] self-end mt-auto disabled:opacity-50'
+        >
+          {isSubmitting ? '올리는 중...' : '올리기'}
+        </button>
       </div>
     </div>
   );
