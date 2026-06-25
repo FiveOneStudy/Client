@@ -7,9 +7,9 @@ import { fetchProgress, completeProgress, searchProgress, fetchTips, fetchTipDet
 function ProgressBar({ percent }) {
   return (
     <div className="relative w-full h-[27px] rounded-full overflow-hidden border-[2px]"
-      style={{ backgroundColor: "white", borderColor: "#F5AFAF" }}>
+      style={{ backgroundColor: "white", borderColor: "P400" }}>
       <div className="absolute left-0 top-0 h-full rounded-full"
-        style={{ width: `${percent}%`, backgroundColor: "#F5AFAF" }} />
+        style={{ width: `${percent}%`, backgroundColor: "P400" }} />
     </div>
   );
 }
@@ -329,7 +329,7 @@ export default function MyStudyPage() {
                       value={writeUrl}
                       onChange={(e) => setWriteUrl(e.target.value)}
                       placeholder="도서 정보 URL"
-                      className="placeholder:text-[#F5AFAF] w-full h-[30px] rounded-full border border-[#F3CFCF] px-5 text-[14px] outline-none"
+                      className="placeholder:text-[P400] w-full h-[30px] rounded-full border border-[#F3CFCF] px-5 text-[14px] outline-none"
                     />
                   </div>
                   <button
@@ -401,7 +401,7 @@ export default function MyStudyPage() {
                       </div>
                       <div className="relative w-full h-[24px] rounded-full overflow-hidden mt-3" style={{ backgroundColor: "white" }}>
                         <div className="absolute left-0 top-0 h-full rounded-full flex items-center justify-end pr-3"
-                          style={{ width: `${myProgress}%`, backgroundColor: "#F5AFAF", minWidth: "70px" }}>
+                          style={{ width: `${myProgress}%`, backgroundColor: "P400", minWidth: "70px" }}>
                           <span className="text-white text-[12px] font-semibold">{myProgress}%</span>
                         </div>
                       </div>
