@@ -1,54 +1,56 @@
 import { useNavigate } from 'react-router-dom';
 import { UserActionPanel } from '../../components/community/UserActionPanel';
 import dropdown from '../../assets/dropdown.svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { fetchMyComments } from '../../api/post.js';
 
 function PostTableHeader() {
   return(
-    <div className="inline-flex h-[36px] px-7 justify-between items-center border-t border-[#68696C]">
+    <div className="inline-flex h-[36px] px-7 justify-between items-center border-y border-[#68696C]">
       <div className="w-[720px] h-full flex items-center justify-center bg-white">
         <span className="text-black text-20 font-medium">내용</span>
       </div>
+      <div className="w-[104px] h-full flex items-center justify-center bg-white">
+      </div>
       <div className="w-[160px] h-full flex items-center justify-center bg-white">
         <span className="text-black text-20 font-medium">작성일</span>
-      </div>
-      <div className="w-[104px] h-full flex items-center justify-center bg-white">
-        <span className="text-black text-20 font-medium">답글</span>
       </div>
     </div>
   );
 }
 
-function PostListItem({ comment, date, reply }) {
+function PostListItem({ content, createdAt, onClick }) {
   return(
-    <div className="inline-flex h-[32px] px-7 justify-between items-center border-t border-[#B4B5B7]">
-      <div className="w-[720px] h-full flex items-center  bg-white">
-        <span className="text-black text-[14px] font-normal">{comment}</span>
-      </div>
-      <div className="w-[160px] h-full flex items-center justify-center bg-white">
-        <span className="text-black text-[14px] font-normal">{date}</span>
+    <div
+      onClick={onClick}
+      className="inline-flex h-[32px] px-7 justify-between items-center border-b border-[#B4B5B7] cursor-pointer"
+    >
+      <div className="w-[720px] h-full flex items-center bg-white">
+        <span className="text-black text-[14px] font-normal">{content}</span>
       </div>
       <div className="w-[104px] h-full flex items-center justify-center bg-white">
-        <span className="text-black text-[14px] font-normal">{reply}</span>
+      </div>
+      <div className="w-[160px] h-full flex items-center justify-center bg-white">
+        <span className="text-black text-[14px] font-normal">{createdAt}</span>
       </div>
     </div>
   );
 }
 
 function PostList({ comments, items }) {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = items;
-
   const totalPages = Math.ceil(comments.length / itemsPerPage);
 
   const currentComments = comments.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
-  )
+  );
 
   const handlePrev = () => {
     if (currentPage > 1) setCurrentPage(prev => prev - 1);
-  }
+  };
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
   };
@@ -58,28 +60,21 @@ function PostList({ comments, items }) {
   return(
     <div>
       <div style={{ minHeight: `${minh}px` }}>
-        {currentComments.map((post, index) => (
-          <PostListItem 
-            key={index}
-            comment={post.comment}
-            date={post.date}
-            reply={post.reply}
+        {currentComments.map((comment) => (
+          <PostListItem
+            key={comment.commentId}
+            content={comment.content}
+            createdAt={comment.createdAt}
+            onClick={() => navigate(`/community/post/${comment.postId}`)}
           />
         ))}
       </div>
 
       <div className="w-[1040px] h-[40px] flex justify-center items-center border-t border-[#B4B5B7]">
         <div className='flex items-center gap-[22px]'>
-          <img 
-            src={dropdown} 
-            onClick={handlePrev}
-            className="rotate-180"
-          />
+          <img src={dropdown} onClick={handlePrev} className="rotate-180" />
           <div>{currentPage}</div>
-          <img 
-            src={dropdown}    
-            onClick={handleNext}
-          />
+          <img src={dropdown} onClick={handleNext} />
         </div>
       </div>
     </div>
@@ -87,26 +82,23 @@ function PostList({ comments, items }) {
 }
 
 export function Mycomment() { 
-  const comments = [ 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }, 
-    { comment: "안녕하세용!", date: "2026.03.30", reply: 3 }
-  ];
-
   const navigate = useNavigate();
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchMyComments()
+      .then(json => {
+        if (json.success) setComments(json.data);
+        else setError('데이터를 불러오지 못했습니다.');
+      })
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>오류: {error}</div>;
 
   return( 
     <div className="min-h-[100%] min-w-[100%] pt-[40px] px-[60px] flex flex-row place-content-between">
