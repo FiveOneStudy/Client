@@ -6,7 +6,7 @@ import { deletePost } from '../../api/post.js';
 import { Comment } from './Comment.jsx';
 
 
-export function PostBottom({ onDelete, comments = [], onCommentAdded, canDelete }) {
+export function PostBottom({ onDelete, comments = [], onCommentAdded, canDelete, postWriter }) {
   const { id } = useParams();
   const [showMenu, setShowMenu] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -64,7 +64,7 @@ export function PostBottom({ onDelete, comments = [], onCommentAdded, canDelete 
       </div>
 
       {showComments && (
-        <Comment comments={comments} onCommentAdded={onCommentAdded} />
+        <Comment comments={comments} onCommentAdded={onCommentAdded} postWriter={postWriter} />
       )}
     </div>
   );

@@ -1,13 +1,16 @@
-import { useState } from "react"; // useRef, useEffect 제거
+import { useState } from "react";
 import { useParams } from 'react-router-dom';
 import profile from '../../assets/profile.svg'
-import { deleteComment } from '../../api/post.js'; // settings import 제거
+import { deleteComment } from '../../api/post.js';
 
-export function CommentItem({ comment, onReply, onCommentDeleted, isFirst }) {
+export function CommentItem({ comment, onReply, onCommentDeleted, isFirst, postWriter }) {
   const { id } = useParams();
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const getDisplayName = (writer) => (writer === postWriter ? writer : '익명');
+  const isAuthor = (writer) => writer === postWriter;
 
   const handleReplySubmit = () => {
     if (!replyContent.trim() || isSubmitting) return;
@@ -40,7 +43,12 @@ export function CommentItem({ comment, onReply, onCommentDeleted, isFirst }) {
         <div className='flex flex-row items-start'>
           <img src={profile} className="w-[32px] mr-3" />
           <div>
-            <div className='text-[14px] font-medium'>{comment.writer}</div>
+            <div className='flex flex-row items-center gap-1'>
+              <div className='text-[14px] font-medium'>{getDisplayName(comment.writer)}</div>
+              {isAuthor(comment.writer) && (
+                <span className='text-[10px] font-light text-P400'>작성자</span>
+              )}
+            </div>
             <div className='text-[14px] font-light whitespace-pre-wrap'>{comment.content}</div>
             <div className="flex flex-row">
               <div className="text-[11px] font-light text-G500 mr-2">{comment.createdAt}</div>
@@ -69,7 +77,12 @@ export function CommentItem({ comment, onReply, onCommentDeleted, isFirst }) {
           <div className='flex flex-row items-start'>
             <img src={profile} className="w-[32px] mr-3" />
             <div>
-              <div className='text-[14px] font-medium'>{child.writer}</div>
+              <div className='flex flex-row items-center gap-1'>
+                <div className='text-[14px] font-medium'>{getDisplayName(child.writer)}</div>
+                {isAuthor(child.writer) && (
+                  <span className='text-[10px] font-light text-P400'>작성자</span>
+                )}
+              </div>
               <div className='text-[14px] font-light whitespace-pre-wrap'>{child.content}</div>
               <div className="flex flex-row">
                 <div className="text-[11px] font-light text-G500 mr-2">{child.createdAt}</div>

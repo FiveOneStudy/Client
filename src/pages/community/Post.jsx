@@ -104,6 +104,7 @@ export function Post() {
           comments={comments}
           onCommentAdded={loadComments}
           canDelete={post.canDelete}
+          postWriter={post.writer}
         />
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { createComment } from '../../api/post.js';
 import { CommentItem } from './CommentItem.jsx';
 
-export function Comment({ comments, onCommentAdded }) {
+export function Comment({ comments, onCommentAdded, postWriter }) {
   const { id } = useParams();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,12 +46,13 @@ export function Comment({ comments, onCommentAdded }) {
           <div className='text-[14px] text-gray-400 cursor-default'>댓글이 없습니다.</div>
         ) : (
           comments.map((comment) => (
-            <CommentItem 
-              key={comment.commentId} 
-              comment={comment} 
+            <CommentItem
+              key={comment.commentId}
+              comment={comment}
               onReply={handleReply}
               onCommentDeleted={onCommentAdded}
               isFirst={comment.commentId === firstCommentId}
+              postWriter={postWriter}
             />
           ))
         )}
