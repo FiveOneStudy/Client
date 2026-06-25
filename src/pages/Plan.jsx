@@ -45,7 +45,17 @@ function PlanCalendar({ selectedDate, setSelectedDate }) {
   let nextDay = 1;
   while (dates.length % 7 !== 0) dates.push({ day: nextDay++, isCurrent: false });
 
-  const changeMonth = (diff) => setCurrentDate(new Date(year, month + diff, 1));
+ const changeMonth = (diff) => {
+  const newMonthDate = new Date(year, month + diff, 1);
+  setCurrentDate(newMonthDate);
+
+  // 선택된 날짜도 새 달로 옮겨서 그 달의 일정을 즉시 불러오기
+  const targetYear = newMonthDate.getFullYear();
+  const targetMonth = newMonthDate.getMonth();
+  const lastDateOfTarget = new Date(targetYear, targetMonth + 1, 0).getDate();
+  const day = Math.min(selectedDate.getDate(), lastDateOfTarget); // 31일→28일 같은 케이스 보정
+  setSelectedDate(new Date(targetYear, targetMonth, day));
+};
   const isSelectedToday = selectedDate.toDateString() === today.toDateString();
 
   const formatDate = (date) =>

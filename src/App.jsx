@@ -6,6 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { PlanProvider } from "./context/Plancontext";
+import { StudyProvider } from "./context/StudyContext"; // 추가
 
 import { Nav } from "./components/Nav.jsx";
 
@@ -30,8 +31,10 @@ import MyStudyPage from "./pages/community/MyStudyPage";
 function MainLayout() {
   return (
     <PlanProvider>
-      <Nav />
-      <Outlet />
+      <StudyProvider> {/* 추가 */}
+        <Nav />
+        <Outlet />
+      </StudyProvider> {/* 추가 */}
     </PlanProvider>
   );
 }
@@ -40,14 +43,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Nav 없는 페이지 */}
-        <Route path="/" element={<Navigate to="/login" replace />} />{" "}
-        {/* 추가 */}
-        <Route path="/login" element={<Login />} /> {/* 추가 */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/Login" element={<Navigate to="/login" replace />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
-        {/* Nav 있는 페이지 */}
+
         <Route element={<MainLayout />}>
           <Route path="/main" element={<Main />} />
           <Route path="/study" element={<MyStudy />} />
