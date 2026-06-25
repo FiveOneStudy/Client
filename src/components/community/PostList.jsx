@@ -41,12 +41,13 @@ export function PostList({ posts, items, onPostClick }) {
           <img 
             src={dropdown} 
             onClick={handlePrev}
-            className="rotate-180"
+            className="rotate-180 cursor-pointer"
           />
           <div>{currentPage}</div>
           <img 
             src={dropdown}    
             onClick={handleNext}
+            className='cursor-pointer'
           />
         </div>
       </div>
