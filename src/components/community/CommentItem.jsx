@@ -1,7 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import profile from '../../assets/profile.svg'
-import { deleteComment } from '../../api/post.js';
+import { deleteComment, fetchProfileImageBlob } from '../../api/post.js';
+
+function CommentAuthorImage({ userId, isAuthor }) {
+  const [imgSrc, setImgSrc] = useState(profile);
+
+  useEffect(() => {
+    if (isAuthor && userId) {
+      fetchProfileImageBlob(`/mypage/profile-image/${userId}`)
+        .then(url => setImgSrc(url))
+        .catch(() => setImgSrc(profile));
+    }
+  }, [userId, isAuthor]);
+
+  return <img src={imgSrc} className="w-[32px] mr-3 rounded-full object-cover" />;
+}
 
 export function CommentItem({ comment, onReply, onCommentDeleted, isFirst, postWriter }) {
   const { id } = useParams();
@@ -41,7 +55,7 @@ export function CommentItem({ comment, onReply, onCommentDeleted, isFirst, postW
     <div className='flex flex-col gap-[12px]'>
       <div className={`flex flex-row items-start justify-between ${!isFirst ? 'pt-[12px] border-t border-G300' : ''}`}>
         <div className='flex flex-row items-start'>
-          <img src={profile} className="w-[32px] mr-3" />
+          <CommentAuthorImage userId={comment.userId} isAuthor={isAuthor(comment.writer)} />
           <div>
             <div className='flex flex-row items-center gap-1'>
               <div className='text-[14px] font-medium'>{getDisplayName(comment.writer)}</div>
@@ -75,7 +89,7 @@ export function CommentItem({ comment, onReply, onCommentDeleted, isFirst, postW
       {comment.children?.map((child) => (
         <div key={child.commentId} className='ml-[30px] flex flex-row items-start justify-between'>
           <div className='flex flex-row items-start'>
-            <img src={profile} className="w-[32px] mr-3" />
+            <CommentAuthorImage userId={child.userId} isAuthor={isAuthor(child.writer)} />
             <div>
               <div className='flex flex-row items-center gap-1'>
                 <div className='text-[14px] font-medium'>{getDisplayName(child.writer)}</div>
