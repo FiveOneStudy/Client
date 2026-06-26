@@ -147,3 +147,14 @@ export const getProfileImageUrl = (userId) => {
 export const getProfile = (profileImageUrl) => {
   return `${BASE_URL}${profileImageUrl}`;
 };
+
+export async function fetchProfileImageBlob(profileImageUrl) {
+  const res = await fetch(`${BASE_URL}${profileImageUrl}`, {
+    headers: {
+      'Authorization': `Bearer ${getToken()}`
+    }
+  });
+  if (!res.ok) throw new Error('이미지를 불러오지 못했습니다.');
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}
