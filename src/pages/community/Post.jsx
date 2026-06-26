@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchPost, fetchComments, fetchPosts } from '../../api/post.js';
 import dropdown from '../../assets/dropdown.svg';
 import dropdownG from '../../assets/dropdown-G300.svg';
@@ -21,6 +21,7 @@ export function Post() {
   const sort = searchParams.get('sort') || 'LATEST';
   const sortPath = SORT_TO_PATH[sort] || 'recent';
   const isMyPost = sort === 'MYPOST';
+  const fetchedRef = useRef(null);
 
   const handleNextPost = useCallback(async () => {
     if (post.nextPostId != null) {
@@ -40,6 +41,10 @@ export function Post() {
   }, [post, sort, navigate]);
 
   useEffect(() => {
+    const key = `${id}-${sort}-${isMyPost}`;
+    if (fetchedRef.current === key) return;
+    fetchedRef.current = key;
+  
     const promise = isMyPost ? fetchPost(id) : fetchPost(id, sort);
     promise.then(json => {
       if (json.success) setPost(json.data);
