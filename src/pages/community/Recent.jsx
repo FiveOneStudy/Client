@@ -12,7 +12,7 @@ export function Recent() {
 
   useEffect(() => {
     fetchPosts('LATEST').then(json => {
-      if (json.success) setRecentPosts(json.data.slice(0, 5));
+      if (json.success) setRecentPosts(json.data);
     });
   }, []);
 
@@ -21,14 +21,14 @@ export function Recent() {
       <div className='w-[1040px] flex flex-col gap-[20px] pt-[68px]'>
         <div> 
           <div className="w-[780px] flex flex-row gap-1">
-            <img src={dropdown} className="w-[32px] rotate-180" onClick={() => navigate("/community")} />
-            <div className="w-[1040px] pl-[4px] text-black text-[32px] font-medium">최신순</div> 
+            <img src={dropdown} className="w-[32px] rotate-180 cursor-pointer" onClick={() => navigate("/community")} />
+            <div className="w-[1040px] pl-[4px] text-black text-[32px] font-medium cursor-default">최신순</div> 
           </div> 
           <PostTableHeader /> 
           <PostList 
             posts={recentPosts} 
             items={10}
-            onPostClick={(post) => navigate(`/community/post/${post.postId}?sort=recent`)}
+            onPostClick={(post) => navigate(`/community/post/${post.postId}?sort=LATEST`)}
           />
         </div> 
       </div>

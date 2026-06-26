@@ -12,7 +12,7 @@ export function Popularity() {
 
   useEffect(() => {
     fetchPosts('POPULAR').then(json => {
-      if (json.success) setPopularPosts(json.data.slice(0, 5));
+      if (json.success) setPopularPosts(json.data);
     });
   }, []);
 
@@ -21,14 +21,14 @@ export function Popularity() {
       <div className='w-[1040px] flex flex-col gap-[20px] pt-[68px]'>
         <div> 
           <div className="w-[780px] flex flex-row gap-1">
-            <img src={dropdown} className="w-[32px] rotate-180" onClick={() => navigate("/community")} />
-            <div className="w-[1040px] pl-[4px] text-black text-[32px] font-medium">인기순</div> 
+            <img src={dropdown} className="w-[32px] rotate-180 cursor-pointer" onClick={() => navigate("/community")} />
+            <div className="w-[1040px] pl-[4px] text-black text-[32px] font-medium cursor-default">인기순</div> 
           </div>
           <PostTableHeader /> 
           <PostList 
             posts={popularPosts} 
             items={10}
-            onPostClick={(post) => navigate(`/community/post/${post.postId}?sort=popularity`)}
+            onPostClick={(post) => navigate(`/community/post/${post.postId}?sort=POPULAR `)}
           />
         </div> 
       </div>
