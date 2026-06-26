@@ -61,7 +61,12 @@ export function Write() {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full border-none outline-none text-[36px] font-medium"
         />
-        <WriteUser writer={myPageData?.nickname || ''} createdAt={today} viewCount={'write'}/>
+        <WriteUser 
+          writer={myPageData?.nickname || ''} 
+          createdAt={today} 
+          viewCount={'write'} 
+          profileImageUrl={myPageData?.profileImageUrl} 
+        />
         <textarea 
           ref={contentRef}
           placeholder="내용"
