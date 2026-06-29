@@ -1,8 +1,18 @@
+import { useState, useEffect } from 'react';
 import profile from '../../assets/profile.svg';
-import { getProfileImageUrl } from '../../api/post.js';
+import { fetchProfileImageBlob } from '../../api/post.js';
 
-export function WriteUser({ writer, createdAt, viewCount, userId }) {
-  const imgSrc = userId ? getProfileImageUrl(userId) : profile;
+export function WriteUser({ writer, createdAt, viewCount, userId, profileImageUrl }) {
+  const [imgSrc, setImgSrc] = useState(profile);
+
+  useEffect(() => {
+    const path = profileImageUrl || (userId ? `/mypage/profile-image/${userId}` : null);
+    if (path) {
+      fetchProfileImageBlob(path)
+        .then(url => setImgSrc(url))
+        .catch(() => setImgSrc(profile));
+    }
+  }, [userId, profileImageUrl]);
 
   return(
     <div className='flex flex-row gap-2 mb-[12px] py-[8px] border-b border-G300 cursor-default'>
