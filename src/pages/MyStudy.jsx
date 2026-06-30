@@ -140,7 +140,7 @@ export function MyStudy() {
               ))}
             </div>
 
-            <div className="text-center text-[11px] pb-3">&lt; 1 &gt;</div>
+            <div className="text-center text-[11px] pb-3">&lt; &nbsp; 1 &nbsp; &gt;</div>
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import profileSvg from "../../assets/profile.svg";
 import { useStudy } from "../../context/StudyContext";
 import { BASE_URL, getToken } from "../../api/index";
+import Vector from "../../assets/Vector.svg";
+import dropdown from "../../assets/dropdown.svg";
 import { fetchProgress, completeProgress, searchProgress, fetchTips, fetchTipDetail, insertTip, deleteTip } from "../../api/StudyAPI";
 
 const toPercent = (value) => {
@@ -284,9 +286,13 @@ export default function MyStudyPage() {
             ) : (
               <div className="w-full flex justify-center pt-10 px-10" onClick={() => setShowPostMenu(false)}>
                 <div className="w-full max-w-[800px]">
-                  <div className="text-[15px] text-[#666] mb-4 cursor-pointer" onClick={() => setSelectedPost(null)}>
-                    &lt; 되돌아가기
-                  </div>
+                  <div
+  className="flex items-center gap-1 text-[15px] text-[#666] mb-4 cursor-pointer"
+  onClick={() => setSelectedPost(null)}
+>
+  <img src={dropdown} alt="dropdown" className="w-4 h-4 scale-x-[-1]" />
+  되돌아가기
+</div>
                   <div className="flex items-start justify-between">
                     <div className="text-[36px] font-bold text-[#222]">{selectedPost.title}</div>
                     <div className="relative mt-3">
@@ -310,7 +316,7 @@ export default function MyStudyPage() {
                     <Avatar src={selectedPost.profileImage} size={36} />
                     <div>
                       <div className="text-[15px] font-semibold">{selectedPost.writer}</div>
-                      <div className="text-[13px] text-[#999]">{selectedPost.date} 조회</div>
+                      <div className="text-[13px] text-[#999]">{selectedPost.date}</div>
                     </div>
                   </div>
                   <div className="w-full h-[1px] bg-[#D9D9D9] mt-4 mb-5" />
@@ -350,21 +356,37 @@ export default function MyStudyPage() {
                 <div className="mt-6 flex flex-col gap-3 shrink-0">
                   <div className="flex flex-col gap-3">
                     {writeUrls.map((url, idx) => (
-                      <div key={idx} className="relative flex items-center">
-                        <input type="text" value={url} onChange={(e) => handleUrlChange(idx, e.target.value)}
-                          placeholder={idx === 0 ? "도서 정보 | URL" : "기타 정보 | "}
-                          className="placeholder:text-P400 w-full h-[30px] rounded-full border border-P400 px-5 pr-9 text-[14px] outline-none" />
+                      <div key={idx} className="relative flex items-center w-full h-[30px] rounded-full border border-P400 px-5 pr-9">
+                        <span className="text-P400 text-[14px] whitespace-nowrap shrink-0 mr-2">
+                          {idx === 0 ? "도서 정보 | " : "기타 정보 | "}
+                        </span>
+                        <input
+                          type="text"
+                          value={url}
+                          onChange={(e) => handleUrlChange(idx, e.target.value)}
+                          placeholder="URL"
+                          className="flex-1 min-w-0 h-full outline-none text-[14px] bg-transparent placeholder:text-P400"
+                        />
                         {writeUrls.length > 1 && (
-                          <button type="button" onClick={() => handleRemoveUrl(idx)}
-                            className="absolute right-3 w-[16px] h-[16px] flex items-center justify-center text-[#CFA9A9] text-[13px] shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveUrl(idx)}
+                            className="absolute right-3 w-[16px] h-[16px] flex items-center justify-center text-[#CFA9A9] text-[13px] shrink-0"
+                          >
                             ×
                           </button>
                         )}
                       </div>
                     ))}
-                    <button type="button" onClick={handleAddUrl}
-                      className="w-full h-[30px] rounded-full border border-[#F3CFCF] px-5 flex items-center gap-2 text-[14px] text-P400">
-                      <span className="text-[14px] leading-none">⊕</span> 추가 정보
+                    <button
+                      type="button"
+                      onClick={handleAddUrl}
+                      className="w-full h-[30px] rounded-full border border-[#F3CFCF] px-5 flex items-center gap-2 text-[14px] text-[#F3CFCF]"
+                    >
+                      <span className="text-[14px] ml-[-10px] leading-none">
+                        <img src={Vector} alt="vector" />
+                      </span>
+                      추가 정보
                     </button>
                   </div>
                   <button onClick={handleInsertTip} disabled={submitting}

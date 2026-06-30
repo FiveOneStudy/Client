@@ -5,16 +5,12 @@ import { completeCheck } from '../api/PlanAPI';
 
 export default function Checklist() {
   const navigate = useNavigate();
-  const { checkList, syncFromResponse, loadByDate } = usePlan();
-
-  // 오늘 날짜
-  const today = new Date();
-  const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const { checkList, syncFromResponse } = usePlan();
 
   const sorted = [...checkList].sort((a, b) => Number(a.completed) - Number(b.completed));
 
   const handleToggle = async (item) => {
-    const data = await completeCheck(dateStr, item.content);
+    const data = await completeCheck(item.checkId);
     syncFromResponse(data);
   };
 
@@ -29,10 +25,10 @@ export default function Checklist() {
         </h2>
         <div className="flex h-[calc(100%-32px)]">
           <div className="flex-1 space-y-3">
-            {sorted.slice(0, 5).map((item, idx) => (
+            {sorted.slice(0, 5).map((item) => (
               <CheckItem
-                key={idx}
-                text={item.content}
+                key={item.checkId}
+                text={item.checkContent}
                 checked={item.completed}
                 onToggle={() => handleToggle(item)}
               />
@@ -40,10 +36,10 @@ export default function Checklist() {
           </div>
           <div className="w-px bg-gray-300 mx-5"></div>
           <div className="flex-1 space-y-3">
-            {sorted.slice(5).map((item, idx) => (
+            {sorted.slice(5).map((item) => (
               <CheckItem
-                key={idx + 5}
-                text={item.content}
+                key={item.checkId}
+                text={item.checkContent}
                 checked={item.completed}
                 onToggle={() => handleToggle(item)}
               />
