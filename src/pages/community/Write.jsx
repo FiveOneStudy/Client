@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import dropdown from '../../assets/dropdown.svg';
 import { WriteUser } from '../../components/community/WriteUser';
 import { createPost, useMyPage } from '../../api/post.js';
+import { PopUp } from '../../components/PopUp.jsx';
 
 export function Write() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export function Write() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const titleRef = useRef(null);
   const contentRef = useRef(null);
 
@@ -21,12 +23,12 @@ export function Write() {
 
   const handleSubmit = () => {
     if (!title.trim()) {
-      alert('제목을 입력해주세요.');
+      setPopupMessage('제목을 입력해주세요.');
       titleRef.current?.focus();
       return;
     }
     if (!content.trim()) {
-      alert('내용을 입력해주세요.');
+      setPopupMessage('내용을 입력해주세요.');
       contentRef.current?.focus();
       return;
     }
@@ -40,7 +42,7 @@ export function Write() {
         if (json.success) {
           navigate(`/community/post/${json.data.postId}`);
         } else {
-          alert('게시글 등록에 실패했습니다.');
+          setPopupMessage('게시글 등록에 실패했습니다.');
         }
       })
       .finally(() => setIsSubmitting(false));
@@ -82,6 +84,10 @@ export function Write() {
           {isSubmitting ? '올리는 중...' : '올리기'}
         </button>
       </div>
+
+      {popupMessage && (
+        <PopUp message={popupMessage} onClose={() => setPopupMessage('')} />
+      )}
     </div>
   );
 }
