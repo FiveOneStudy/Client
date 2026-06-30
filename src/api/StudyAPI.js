@@ -1,5 +1,6 @@
   const BASE_URL = 'https://port-0-server-m1ed5avw1d3364c3.sel4.cloudtype.app';
   const getToken = () => localStorage.getItem('accessToken');
+  
 
   const headers = () => ({
     'Content-Type': 'application/json',
@@ -144,4 +145,6 @@ export const deleteTip = async (studyId) => {
   }
   return res.json();
 };
+
+
 

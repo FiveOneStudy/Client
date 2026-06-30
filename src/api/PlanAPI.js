@@ -44,7 +44,7 @@
 
       export const deleteMonth = async (date, content) => {
         const res = await fetch(`${BASE}/month/delete`, {
-          method: 'POST',
+          method: 'DELETE',
           headers: headers(),
           body: JSON.stringify({ date, content }),
         });
@@ -64,7 +64,7 @@
       };
 
       export const modifyCheck = async (date, oldContent, newContent) => {
-        const res = await fetch(`${BASE}/check/modify`, {
+        const res = await fetch(`${BASE}/check/update`, {
           method: 'PUT',
           headers: headers(),
           body: JSON.stringify({ date, oldContent, newContent }),

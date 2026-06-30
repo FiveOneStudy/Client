@@ -10,23 +10,18 @@ import { PlusButton } from '../components/plan/PlusButton';
 import UpIcon from "../assets/up.svg";
 import DownIcon from "../assets/down.svg";
 
-/* ================== Plan (페이지 진입점) ================== */
 export function Plan() {
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
 
   return (
     <div className="flex gap-40 justify-center mt-10">
-      <PlanCalendar
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
-      />
+      <PlanCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <Schedule selectedDate={selectedDate} />
     </div>
   );
 }
 
-/* ================== PlanCalendar ================== */
 function PlanCalendar({ selectedDate, setSelectedDate }) {
   const { monthPlans } = usePlan();
   const today = new Date();
@@ -45,17 +40,16 @@ function PlanCalendar({ selectedDate, setSelectedDate }) {
   let nextDay = 1;
   while (dates.length % 7 !== 0) dates.push({ day: nextDay++, isCurrent: false });
 
- const changeMonth = (diff) => {
-  const newMonthDate = new Date(year, month + diff, 1);
-  setCurrentDate(newMonthDate);
+  const changeMonth = (diff) => {
+    const newMonthDate = new Date(year, month + diff, 1);
+    setCurrentDate(newMonthDate);
+    const targetYear = newMonthDate.getFullYear();
+    const targetMonth = newMonthDate.getMonth();
+    const lastDateOfTarget = new Date(targetYear, targetMonth + 1, 0).getDate();
+    const day = Math.min(selectedDate.getDate(), lastDateOfTarget);
+    setSelectedDate(new Date(targetYear, targetMonth, day));
+  };
 
-  // 선택된 날짜도 새 달로 옮겨서 그 달의 일정을 즉시 불러오기
-  const targetYear = newMonthDate.getFullYear();
-  const targetMonth = newMonthDate.getMonth();
-  const lastDateOfTarget = new Date(targetYear, targetMonth + 1, 0).getDate();
-  const day = Math.min(selectedDate.getDate(), lastDateOfTarget); // 31일→28일 같은 케이스 보정
-  setSelectedDate(new Date(targetYear, targetMonth, day));
-};
   const isSelectedToday = selectedDate.toDateString() === today.toDateString();
 
   const formatDate = (date) =>
@@ -139,7 +133,6 @@ function PlanCalendar({ selectedDate, setSelectedDate }) {
   );
 }
 
-/* ================== Schedule ================== */
 export function Schedule({ selectedDate }) {
   const { planList, checkList, loadByDate, syncFromResponse } = usePlan();
 
@@ -161,7 +154,7 @@ export function Schedule({ selectedDate }) {
   // ── 일정 ──
   const handleAdd = async () => {
     if (!inputValue.trim()) { setShowInput(false); return; }
-    setShowInput(false); // 먼저 닫아서 onBlur 재실행 방지
+    setShowInput(false);
     const data = await insertMonth(dateStr, inputValue.trim());
     syncFromResponse(data);
     setInputValue('');
@@ -183,7 +176,7 @@ export function Schedule({ selectedDate }) {
   // ── 체크리스트 ──
   const handleAddCheck = async () => {
     if (!checkInput.trim()) { setShowCheckInput(false); return; }
-    setShowCheckInput(false); // 먼저 닫아서 onBlur 재실행 방지
+    setShowCheckInput(false);
     const data = await insertCheck(dateStr, checkInput.trim());
     syncFromResponse(data);
     setCheckInput('');
@@ -194,6 +187,7 @@ export function Schedule({ selectedDate }) {
     const data = await modifyCheck(dateStr, checkList[index].content, newText.trim());
     syncFromResponse(data);
     setCheckEditingIndex(null);
+    setCheckInput('');
   };
 
   const handleCheckDelete = async (index) => {
@@ -235,7 +229,8 @@ export function Schedule({ selectedDate }) {
                 <span className="font-medium text-base flex-1">{text}</span>
               )}
               <MoreMenu
-                index={index} menuIndex={menuIndex}
+                index={index}
+                menuIndex={menuIndex}
                 setMenuIndex={setMenuIndex}
                 setEditingIndex={setEditingIndex}
                 handleDelete={handleDelete}
@@ -249,14 +244,8 @@ export function Schedule({ selectedDate }) {
                 value={inputValue} autoFocus
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={async (e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    await handleAdd();
-                  }
-                  if (e.key === 'Escape') {
-                    setShowInput(false);
-                    setInputValue('');
-                  }
+                  if (e.key === 'Enter') { e.preventDefault(); await handleAdd(); }
+                  if (e.key === 'Escape') { setShowInput(false); setInputValue(''); }
                 }}
                 onBlur={handleAdd}
                 className="w-full outline-none bg-transparent font-medium text-base"
@@ -280,11 +269,13 @@ export function Schedule({ selectedDate }) {
                 <>
                   <div className="w-6 h-6 border rounded-sm flex items-center justify-center bg-P100 border-P300 mr-2" />
                   <input
-                    autoFocus defaultValue={item.content}
+                    autoFocus
+                    value={checkInput}
+                    onChange={(e) => setCheckInput(e.target.value)}
                     onBlur={(e) => handleCheckEditSave(index, e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleCheckEditSave(index, e.target.value);
-                      if (e.key === 'Escape') setCheckEditingIndex(null);
+                      if (e.key === 'Enter') handleCheckEditSave(index, checkInput);
+                      if (e.key === 'Escape') { setCheckEditingIndex(null); setCheckInput(''); }
                     }}
                     className="flex-1 outline-none font-medium text-base"
                   />
@@ -299,10 +290,14 @@ export function Schedule({ selectedDate }) {
                 </div>
               )}
               <MoreMenu
-                index={index} menuIndex={checkMenuIndex}
+                index={index}
+                menuIndex={checkMenuIndex}
                 setMenuIndex={setCheckMenuIndex}
-                setEditingIndex={setCheckEditingIndex}
-                handleDelete={() => handleCheckDelete(index)}
+                setEditingIndex={(idx) => {
+                  setCheckInput(checkList[idx].content);
+                  setCheckEditingIndex(idx);
+                }}
+                handleDelete={handleCheckDelete}
               />
             </li>
           ))}
@@ -313,14 +308,8 @@ export function Schedule({ selectedDate }) {
                 value={checkInput} autoFocus
                 onChange={(e) => setCheckInput(e.target.value)}
                 onKeyDown={async (e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    await handleAddCheck();
-                  }
-                  if (e.key === 'Escape') {
-                    setShowCheckInput(false);
-                    setCheckInput('');
-                  }
+                  if (e.key === 'Enter') { e.preventDefault(); await handleAddCheck(); }
+                  if (e.key === 'Escape') { setShowCheckInput(false); setCheckInput(''); }
                 }}
                 onBlur={handleAddCheck}
                 className="outline-none font-medium text-base flex-1"
