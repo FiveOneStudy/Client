@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import dropdownImg from "../assets/dropdown.svg";
 import { useStudy } from "../context/StudyContext";
@@ -33,6 +33,16 @@ export function MyStudy() {
     setComplete(true);
   };
 
+  // ESC로 모달 닫기
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   return (
     <div className="flex justify-center px-10 pt-16 pb-10">
       <div className="flex gap-10 items-stretch">
@@ -57,37 +67,37 @@ export function MyStudy() {
               <img src={dropdownImg} alt="right" className="w-8 h-8 brightness-0 invert" />
             </button>
 
-            <div className="flex justify-center h-full items-center">
-              {uniqueMyStudies.length === 0 ? (
-                <div className="flex items-center justify-center text-white text-[13px]">
-                  참가 중인 스터디가 없습니다
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-6">
-                  {currentStudies.map((study) => (
-                    <div
-                      key={study.name}
-                      className="relative bg-[#FFFFFF] w-[200px] h-[135px] rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
-                    >
-                      <div className="absolute top-[18px] left-1/2 -translate-x-1/2 text-[18px] font-semibold whitespace-nowrap">
-                        {study.name}
-                      </div>
+          <div className="flex justify-center items-start h-full pt-2">
+  {uniqueMyStudies.length === 0 ? (
+    <div className="flex items-center justify-center h-full text-white text-[13px]">
+      참가 중인 스터디가 없습니다
+    </div>
+  ) : (
+    <div className="grid grid-cols-2 gap-6">
+      {currentStudies.map((study) => (
+        <div
+          key={study.name}
+          className="relative bg-[#FFFFFF] w-[200px] h-[135px] rounded-[6px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+        >
+          <div className="absolute top-[18px] left-1/2 -translate-x-1/2 text-[18px] font-semibold whitespace-nowrap">
+            {study.name}
+          </div>
 
-                      <div className="absolute top-[48px] left-1/2 -translate-x-1/2 text-[26px] font-bold">
-                        D-{study.dday}
-                      </div>
+          <div className="absolute top-[48px] left-1/2 -translate-x-1/2 text-[26px] font-bold">
+            D-{study.dday}
+          </div>
 
-                      <button
-                        onClick={() => navigate(`/mystudy/${study.name}`)}
-                        className="absolute bottom-[10px] left-1/2 -translate-x-1/2 w-[70%] h-[22px] mt-1 text-[11px] bg-[#EFAAAA] text-white rounded-[6px]"
-                      >
-                        입장하기
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          <button
+            onClick={() => navigate(`/mystudy/${study.name}`)}
+            className="absolute bottom-[10px] left-1/2 -translate-x-1/2 w-[70%] h-[22px] mt-1 text-[11px] bg-[#EFAAAA] text-white rounded-[6px]"
+          >
+            입장하기
+          </button>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
           </div>
         </div>
 
@@ -130,14 +140,20 @@ export function MyStudy() {
               ))}
             </div>
 
-            <div className="text-center text-[11px] pb-3">&lt; 1 &gt;</div>
+            <div className="text-center text-[11px] pb-3">&lt; &nbsp; 1 &nbsp; &gt;</div>
           </div>
         </div>
       </div>
 
       {open && (
-        <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
-          <div className="w-[380px] bg-[#FFFFFF] rounded-[20px] px-8 py-7 shadow-xl">
+        <div
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 bg-black/30 flex justify-center items-center z-50"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-[380px] bg-[#FFFFFF] rounded-[20px] px-8 py-7 shadow-xl"
+          >
             <div className="text-center text-[20px] font-semibold mb-6">STUDY 추가 요청</div>
             <div className="w-[85%] mx-auto">
               <div className="text-[12px] text-gray-500 mb-2">자격증 이름</div>

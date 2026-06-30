@@ -10,9 +10,9 @@ export default function MyStudy() {
   const { myStudies } = useStudy();
   const [page, setPage] = useState(0);
 
-  const uniqueStudies = Array.from(
-    new Map(myStudies.map((s) => [s.name, s])).values()
-  );
+ const uniqueStudies = Array.from(
+  new Map(myStudies.map((s) => [s.name, s])).values()
+).reverse();
 
   const totalPages = Math.max(1, Math.ceil(uniqueStudies.length / PAGE_SIZE));
   const currentStudies = uniqueStudies.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
@@ -53,7 +53,7 @@ export default function MyStudy() {
         </button>
 
         {/* 카드 영역 */}
-        <div className="flex gap-9 px-10 justify-center">
+        <div className="flex gap-9 px-10 justify-start">
           {currentStudies.map((study) => (
             <div
               key={study.name}
