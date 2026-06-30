@@ -7,6 +7,7 @@ import {
 import CheckItem from '../components/CheckItem';
 import MoreMenu from '../components/plan/MoreMenu';
 import { PlusButton } from '../components/plan/PlusButton';
+import { PopUp } from '../components/PopUp';
 import UpIcon from "../assets/up.svg";
 import DownIcon from "../assets/down.svg";
 
@@ -151,13 +152,15 @@ export function Schedule({ selectedDate }) {
   const [checkEditingIndex, setCheckEditingIndex] = useState(null);
   const [checkMenuIndex, setCheckMenuIndex]       = useState(null);
 
+  const [popupMessage, setPopupMessage] = useState(null);
+
   // ── 일정 ──
   const handleAdd = async () => {
     const value = inputValue.trim();
     if (!value) { setShowInput(false); return; }
 
     if (planList.some((p) => p.planContent === value)) {
-      alert('이미 같은 일정이 있어요');
+      setPopupMessage('이미 같은 일정이 있어요');
       setShowInput(false);
       setInputValue('');
       return;
@@ -170,7 +173,7 @@ export function Schedule({ selectedDate }) {
       setInputValue('');
     } catch (err) {
       console.error('일정 추가 실패:', err);
-      alert('일정을 추가하지 못했어요. 잠시 후 다시 시도해주세요.');
+      setPopupMessage('일정을 추가하지 못했어요. 잠시 후 다시 시도해주세요.');
     }
   };
 
@@ -180,7 +183,7 @@ export function Schedule({ selectedDate }) {
 
     const isDuplicate = planList.some((p, i) => i !== index && p.planContent === value);
     if (isDuplicate) {
-      alert('이미 같은 일정이 있어요');
+      setPopupMessage('이미 같은 일정이 있어요');
       setEditingIndex(null);
       return;
     }
@@ -191,7 +194,7 @@ export function Schedule({ selectedDate }) {
       setEditingIndex(null);
     } catch (err) {
       console.error('일정 수정 실패:', err);
-      alert('일정을 수정하지 못했어요. 잠시 후 다시 시도해주세요.');
+      setPopupMessage('일정을 수정하지 못했어요. 잠시 후 다시 시도해주세요.');
     }
   };
 
@@ -201,7 +204,7 @@ export function Schedule({ selectedDate }) {
       syncFromResponse(data);
     } catch (err) {
       console.error('일정 삭제 실패:', err);
-      alert('일정을 삭제하지 못했어요. 잠시 후 다시 시도해주세요.');
+      setPopupMessage('일정을 삭제하지 못했어요. 잠시 후 다시 시도해주세요.');
     } finally {
       setMenuIndex(null);
     }
@@ -213,7 +216,7 @@ export function Schedule({ selectedDate }) {
     if (!value) { setShowCheckInput(false); return; }
 
     if (checkList.some((item) => item.checkContent === value)) {
-      alert('이미 같은 항목이 있어요');
+      setPopupMessage('이미 같은 항목이 있어요');
       setShowCheckInput(false);
       setCheckInput('');
       return;
@@ -226,7 +229,7 @@ export function Schedule({ selectedDate }) {
       setCheckInput('');
     } catch (err) {
       console.error('체크리스트 추가 실패:', err);
-      alert('항목을 추가하지 못했어요. 잠시 후 다시 시도해주세요.');
+      setPopupMessage('항목을 추가하지 못했어요. 잠시 후 다시 시도해주세요.');
     }
   };
 
@@ -236,7 +239,7 @@ export function Schedule({ selectedDate }) {
 
     const isDuplicate = checkList.some((item, i) => i !== index && item.checkContent === value);
     if (isDuplicate) {
-      alert('이미 같은 항목이 있어요');
+      setPopupMessage('이미 같은 항목이 있어요');
       setCheckEditingIndex(null);
       return;
     }
@@ -248,7 +251,7 @@ export function Schedule({ selectedDate }) {
       setCheckInput('');
     } catch (err) {
       console.error('체크리스트 수정 실패:', err);
-      alert('항목을 수정하지 못했어요. 잠시 후 다시 시도해주세요.');
+      setPopupMessage('항목을 수정하지 못했어요. 잠시 후 다시 시도해주세요.');
     }
   };
 
@@ -258,7 +261,7 @@ export function Schedule({ selectedDate }) {
       syncFromResponse(data);
     } catch (err) {
       console.error('체크리스트 삭제 실패:', err);
-      alert('항목을 삭제하지 못했어요. 잠시 후 다시 시도해주세요.');
+      setPopupMessage('항목을 삭제하지 못했어요. 잠시 후 다시 시도해주세요.');
     } finally {
       setCheckMenuIndex(null);
     }
@@ -270,7 +273,7 @@ export function Schedule({ selectedDate }) {
       syncFromResponse(data);
     } catch (err) {
       console.error('체크리스트 토글 실패:', err);
-      alert('상태를 변경하지 못했어요. 잠시 후 다시 시도해주세요.');
+      setPopupMessage('상태를 변경하지 못했어요. 잠시 후 다시 시도해주세요.');
     }
   };
 
@@ -400,6 +403,10 @@ export function Schedule({ selectedDate }) {
           <PlusButton /><div className="text-G500">계획 추가</div>
         </div>
       </div>
+
+      {popupMessage && (
+        <PopUp message={popupMessage} onClose={() => setPopupMessage(null)} />
+      )}
     </div>
   );
 }

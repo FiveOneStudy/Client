@@ -6,6 +6,7 @@ import { BASE_URL, getToken } from "../../api/index";
 import Vector from "../../assets/Vector.svg";
 import dropdown from "../../assets/dropdown.svg";
 import { fetchProgress, completeProgress, searchProgress, fetchTips, fetchTipDetail, insertTip, deleteTip } from "../../api/StudyAPI";
+import { PopUp } from "../../components/PopUp";
 
 const toPercent = (value) => {
   if (value === null || value === undefined) return 0;
@@ -113,6 +114,8 @@ export default function MyStudyPage() {
   const [writeUrls, setWriteUrls] = useState([""]);
   const [submitting, setSubmitting] = useState(false);
 
+  const [popupMessage, setPopupMessage] = useState(null);
+
   useEffect(() => {
     if (activeTab === "TIPS") loadTips();
     if (activeTab === "PROGRESS") loadProgress();
@@ -150,7 +153,14 @@ export default function MyStudyPage() {
   const handleRemoveUrl = (index) => setWriteUrls((prev) => prev.filter((_, i) => i !== index));
 
   const handleInsertTip = async () => {
-    if (!writeTitle.trim() || !writeContent.trim()) return;
+    if (!writeTitle.trim()) {
+      setPopupMessage("제목이 입력되지 않았습니다!");
+      return;
+    }
+    if (!writeContent.trim()) {
+      setPopupMessage("내용이 입력되지 않았습니다!");
+      return;
+    }
     setSubmitting(true);
     const urls = writeUrls.map((u) => u.trim()).filter(Boolean);
     const res = await insertTip(id, writeTitle, writeContent, urls);
@@ -323,15 +333,22 @@ export default function MyStudyPage() {
                   <div className="text-[15px] leading-[2] text-[#555] whitespace-pre-line min-h-[260px]">
                     {selectedPost.content}
                   </div>
+                  <div className="w-full h-[1px] bg-[#D9D9D9] mt-10 mb-4" />
                   {selectedPost.url?.length > 0 && (
-                    <div className="mt-4 flex flex-col gap-2">
+                    <div className="flex flex-col gap-3">
                       {selectedPost.url.map((u, i) => (
                         <a key={i} href={u} target="_blank" rel="noreferrer"
-                          className="text-[13px] text-blue-500 underline">{u}</a>
+                          className="flex items-center w-full h-[30px] rounded-full border border-P400 px-5">
+                          <span className="text-P400 text-[14px] whitespace-nowrap shrink-0 mr-2">
+                            {i === 0 ? "도서 정보 | " : "기타 정보 | "}
+                          </span>
+                          <span className="flex-1 min-w-0 truncate text-[14px] text-P400">
+                            {u}
+                          </span>
+                        </a>
                       ))}
                     </div>
                   )}
-                  <div className="w-full h-[1px] bg-[#D9D9D9] mt-10 mb-4" />
                 </div>
               </div>
             )}
@@ -523,6 +540,11 @@ export default function MyStudyPage() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* 제목/내용 미입력 팝업 */}
+        {popupMessage && (
+          <PopUp message={popupMessage} onClose={() => setPopupMessage(null)} />
         )}
       </div>
     </div>
