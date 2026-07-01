@@ -66,21 +66,18 @@ export function Post() {
   return (
     <div className='min-w-[100%] pt-[80px] flex justify-center items-center'>
       <div className='w-[720px]'>
-        <div className="flex flex-row w-full justify-between items-start">
-          <div>
-            <div className="flex flex-row cursor-pointer" onClick={() => navigate(`/community/${sortPath}`)}>
-              <div className="text-[14px]">
-                {sort === 'POPULAR' ? '인기순' : sort === 'MYPOST' ? '내가 작성한 글' : '최신순'}
-              </div>
-              <img src={dropdown} className='w-[14px]'/>
+        <div className="flex flex-row w-full justify-between items-center">
+          <div className="flex flex-row cursor-pointer" onClick={() => navigate(`/community/${sortPath}`)}>
+            <div className="text-[14px]">
+              {sort === 'POPULAR' ? '인기순' : sort === 'MYPOST' ? '내가 작성한 글' : '최신순'}
             </div>
-            <div className="w-full border-none outline-none text-[36px] font-medium">{post.title}</div>
+            <img src={dropdown} className='w-[14px]'/>
           </div>
 
-          <div className='flex flex-row'>
+          <div className='flex flex-row pb-[4px]'>
             {!isMyPost && (
               <div
-                className='flex flex-row gap-1 px-[10px] py-[4px] rounded-[14px] border border-G300 cursor-pointer'
+                className='w-[76px] h-[32px] flex flex-row gap-1 px-[10px] py-[4px] rounded-[14px] border border-G300 cursor-pointer'
                 onClick={handleNextPost}
               >
                 <img src={dropdownG} className='w-[14px] rotate-90'/>
@@ -88,12 +85,16 @@ export function Post() {
               </div>
             )}
             <div
-              className='flex flex-row gap-1 ml-[12px] px-[14px] py-[4px] rounded-[14px] border border-G300 cursor-pointer'
+              className='w-[54px] h-[32px] flex flex-row gap-1 ml-[12px] px-[14px] py-[4px] rounded-[14px] border border-G300 cursor-pointer'
               onClick={() => navigate(`/community/${sortPath}`)}
             >
               <div className="text-[14px] text-G300 font-normal">목록</div>
             </div>
           </div>
+        </div>
+        
+        <div className="w-full border-none outline-none text-[36px] font-medium">
+          {post.title}
         </div>
 
         <WriteUser
