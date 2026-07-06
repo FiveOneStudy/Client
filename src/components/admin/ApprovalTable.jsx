@@ -13,7 +13,7 @@ export default function ApprovalTable({
   onReject,
 }) {
   return (
-    <div className="w-[1200px] outline outline-1 outline-P500 rounded-lg p-4">
+    <div className="w-[1200px] mx-auto outline outline-1 outline-P500 rounded-lg p-4">
       <div className="text-lg font-semibold mb-3">{title}</div>
 
       <table className="w-full table-fixed text-sm">
@@ -29,7 +29,7 @@ export default function ApprovalTable({
         </thead>
         <tbody>
           {data.map((row) => (
-            <tr key={row.id} className="border-b last:border-b-0">
+            <tr key={row.id} className="border-b border-G200">
               {columns.map((col) => (
                 <td key={col.key} className="text-center py-3 px-4 truncate">
                   {col.key === "status" ? (
