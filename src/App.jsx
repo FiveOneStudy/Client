@@ -28,6 +28,8 @@ import { Write } from "./pages/community/Write.jsx";
 import { Post } from "./pages/community/Post.jsx";
 import MyStudyPage from "./pages/community/MyStudyPage";
 
+import Admin from "./pages/admin/Admin.jsx";
+
 function PrivateRoute() {
   const token = localStorage.getItem("accessToken");
   console.log("PrivateRoute 실행됨, 토큰:", token);
@@ -54,7 +56,8 @@ function App() {
         <Route path="/Login" element={<Navigate to="/login" replace />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/passwordreset" element={<PasswordReset />} />
-
+        <Route path="/admin" element={<Admin />} />
+        
         <Route element={<PrivateRoute />}>
           <Route element={<MainLayout />}>
             <Route path="/main" element={<Main />} />
