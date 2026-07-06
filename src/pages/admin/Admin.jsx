@@ -112,13 +112,10 @@ export default function AdminApprovalPage() {
   const commentPagination = usePagination(commentList, 3);
 
   const handleApprove = (setList) => (row) => {
-    if (!window.confirm("승인하시겠습니까?")) return;
-    // 승인은 자리만 비움 (위치 유지)
-    setList((prev) =>
-      prev.map((item) => (item && item.id === row.id ? null : item)),
-    );
-    setPopupMessage("승인되었습니다.");
-  };
+  if (!window.confirm("승인하시겠습니까?")) return;
+  setList((prev) => prev.filter((item) => item.id !== row.id));
+  setPopupMessage("승인되었습니다.");
+};
 
   // 거절/삭제 버튼 클릭 시 확인창 대신 사유 입력 모달을 연다
   const handleRejectClick =
@@ -128,13 +125,12 @@ export default function AdminApprovalPage() {
     };
 
   const handleRejectSubmit = (reason) => {
-    const { row, setList, label } = rejectTarget;
-    console.log(`${label} 사유:`, reason);
-    // 거절은 완전히 제거 (아래 항목이 위로 당겨짐)
-    setList((prev) => prev.filter((item) => item && item.id !== row.id));
-    setRejectTarget(null);
-    setPopupMessage(`${label}되었습니다.`);
-  };
+  const { row, setList, label } = rejectTarget;
+  console.log(`${label} 사유:`, reason);
+  setList((prev) => prev.filter((item) => item.id !== row.id));
+  setRejectTarget(null);
+  setPopupMessage(`${label}되었습니다.`);
+};
 
   return (
     <>

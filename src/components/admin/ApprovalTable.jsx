@@ -12,7 +12,11 @@ export default function ApprovalTable({
   onApprove,
   onReject,
   rejectLabel = "거절",
+  rowsPerPage = 3,
 }) {
+  // 부족한 칸은 빈 행으로 채워서 항상 rowsPerPage만큼 렌더링
+  const paddedData = [...data, ...Array(Math.max(0, rowsPerPage - data.length)).fill(null)];
+
   return (
     <div className="w-[1200px] mx-auto outline outline-1 outline-P500 rounded-lg p-4">
       <div className="text-lg font-semibold mb-3">{title}</div>
@@ -29,7 +33,7 @@ export default function ApprovalTable({
           </tr>
         </thead>
         <tbody>
-          {data.map((row, idx) =>
+          {paddedData.map((row, idx) =>
             row ? (
               <tr key={row.id} className="border-b border-G200 h-14">
                 {columns.map((col) => (
