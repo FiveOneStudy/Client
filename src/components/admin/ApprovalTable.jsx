@@ -11,6 +11,7 @@ export default function ApprovalTable({
   onPageChange,
   onApprove,
   onReject,
+  rejectLabel = "거절",
 }) {
   return (
     <div className="w-[1200px] mx-auto outline outline-1 outline-P500 rounded-lg p-4">
@@ -51,7 +52,7 @@ export default function ApprovalTable({
                     onClick={() => onReject(row)}
                     className="border border-P300 text-P400 text-xs px-4 py-1.5 rounded-md whitespace-nowrap"
                   >
-                    거절
+                    {rejectLabel}
                   </button>
                 </div>
               </td>
