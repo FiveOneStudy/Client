@@ -167,11 +167,11 @@ export default function MyStudyPage() {
       if (data === true) {
         setActiveTab("WRITING");
       } else {
-        setPopupMessage("해당 자격증의 뱃지가 없으므로 글을 작성하실 수 없습니다.");
+        setPopupMessage("해당 자격증의 뱃지가 없으므로\n글을 작성하실 수 없습니다.");
       }
     } catch (err) {
       console.error("뱃지 체크 실패:", err);
-      setPopupMessage("해당 자격증의 뱃지가 없으므로 글을 작성하실 수 없습니다.");
+      setPopupMessage("해당 자격증의 뱃지가 없으므로\n 글을 작성하실 수 없습니다.");
     }
   };
 
@@ -517,10 +517,12 @@ export default function MyStudyPage() {
                             onToggle={() => handleToggleMission(subject)} />
                         ))
                       )}
+
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> 
+
             )}
           </div>
         )}
