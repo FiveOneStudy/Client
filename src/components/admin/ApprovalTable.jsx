@@ -1,4 +1,5 @@
 // components/admin/ApprovalTable.jsx
+import { useNavigate } from "react-router-dom";
 import StatusBadge from "./StatusBadge";
 import Pagination from "./Pagination";
 
@@ -12,8 +13,17 @@ export default function ApprovalTable({
   onApprove,
   onReject,
   rejectLabel = "거절",
+  getDetailPath,
   rowsPerPage = 3,
 }) {
+  const navigate = useNavigate();
+
+  const handleContentClick = (row) => {
+    if (!getDetailPath) return;
+    const path = getDetailPath(row);
+    if (path) navigate(path);
+  };
+
   // 부족한 칸은 빈 행으로 채워서 항상 rowsPerPage만큼 렌더링
   const paddedData = [...data, ...Array(Math.max(0, rowsPerPage - data.length)).fill(null)];
 
@@ -37,7 +47,17 @@ export default function ApprovalTable({
             row ? (
               <tr key={row.id} className="border-b border-G200 h-14">
                 {columns.map((col) => (
-                  <td key={col.key} className="text-center py-3 px-4 truncate">
+                  <td
+                    key={col.key}
+                    className={`text-center py-3 px-4 truncate ${
+                      col.key === "content" && getDetailPath
+                        ? "cursor-pointer hover:underline hover:text-P400"
+                        : ""
+                    }`}
+                    onClick={
+                      col.key === "content" ? () => handleContentClick(row) : undefined
+                    }
+                  >
                     {col.key === "status" ? (
                       <StatusBadge status={row.status} />
                     ) : (

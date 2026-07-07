@@ -49,19 +49,19 @@ export default function AdminApprovalPage() {
   const commentPagination = usePagination(commentList, 3);
 
   // 최초 진입 시 목록 조회
- useEffect(() => {
-  fetchPendingCerts()
-    .then((res) => setCertList(res.data.data))
-    .catch(() => setPopupMessage("자격증 목록을 불러오지 못했습니다."));
+  useEffect(() => {
+    fetchPendingCerts()
+      .then((res) => setCertList(res.data.data))
+      .catch(() => setPopupMessage("자격증 목록을 불러오지 못했습니다."));
 
-  fetchPendingPosts()
-    .then((res) => setPostList(res.data.data))
-    .catch(() => setPopupMessage("게시글 목록을 불러오지 못했습니다."));
+    fetchPendingPosts()
+      .then((res) => setPostList(res.data.data))
+      .catch(() => setPopupMessage("게시글 목록을 불러오지 못했습니다."));
 
-  fetchPendingComments()
-    .then((res) => setCommentList(res.data.data))
-    .catch(() => setPopupMessage("댓글 목록을 불러오지 못했습니다."));
-}, []); 
+    fetchPendingComments()
+      .then((res) => setCommentList(res.data.data))
+      .catch(() => setPopupMessage("댓글 목록을 불러오지 못했습니다."));
+  }, []);
 
   const handleApprove = (type, setList) => async (row) => {
     if (!window.confirm("승인하시겠습니까?")) return;
@@ -113,6 +113,7 @@ export default function AdminApprovalPage() {
           onPageChange={certPagination.setPage}
           onApprove={handleApprove("cert", setCertList)}
           onReject={handleRejectClick("cert", setCertList)}
+          rowsPerPage={3}
         />
         <ApprovalTable
           title="게시글 승인 대기"
@@ -124,6 +125,8 @@ export default function AdminApprovalPage() {
           onApprove={handleApprove("post", setPostList)}
           onReject={handleRejectClick("post", setPostList, "삭제")}
           rejectLabel="삭제"
+          getDetailPath={(row) => `/community/post/${row.id}`}
+          rowsPerPage={3}
         />
         <ApprovalTable
           title="댓글 승인 대기"
@@ -135,6 +138,10 @@ export default function AdminApprovalPage() {
           onApprove={handleApprove("comment", setCommentList)}
           onReject={handleRejectClick("comment", setCommentList, "삭제")}
           rejectLabel="삭제"
+          getDetailPath={(row) =>
+            `/community/post/${row.postId}#comment-${row.id}`
+          }
+          rowsPerPage={3}
         />
         <div></div>
       </div>
