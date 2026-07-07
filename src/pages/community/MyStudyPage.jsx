@@ -152,6 +152,29 @@ export default function MyStudyPage() {
 
   const handleRemoveUrl = (index) => setWriteUrls((prev) => prev.filter((_, i) => i !== index));
 
+  // 뱃지 보유 여부 체크 후 글 작성 탭으로 이동
+  const handleWritingTabClick = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/study/badge/check`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({ studyName: id }),
+      });
+      const data = await res.json();
+      if (data === true) {
+        setActiveTab("WRITING");
+      } else {
+        setPopupMessage("해당 자격증의 뱃지가 없으므로 글을 작성하실 수 없습니다.");
+      }
+    } catch (err) {
+      console.error("뱃지 체크 실패:", err);
+      setPopupMessage("해당 자격증의 뱃지가 없으므로 글을 작성하실 수 없습니다.");
+    }
+  };
+
   const handleInsertTip = async () => {
     if (!writeTitle.trim()) {
       setPopupMessage("제목이 입력되지 않았습니다!");
@@ -163,7 +186,8 @@ export default function MyStudyPage() {
     }
     setSubmitting(true);
     const urls = writeUrls.map((u) => u.trim()).filter(Boolean);
-    const res = await insertTip(id, writeTitle, writeContent, urls);
+    const safeUrls = urls.length > 0 ? urls : [""];
+    const res = await insertTip(id, writeTitle, writeContent, safeUrls);
     if (res?.answer) {
       setWriteTitle(""); setWriteContent(""); setWriteUrls([""]);
       setActiveTab("TIPS");
@@ -236,7 +260,7 @@ export default function MyStudyPage() {
           </svg>
           <span className="text-[13px] font-extrabold">TIPS</span>
         </div>
-        <div onClick={() => setActiveTab("WRITING")}
+        <div onClick={handleWritingTabClick}
           className={`py-3 border-b border-G200 text-[13px] text-center cursor-pointer transition-all
             ${activeTab === "WRITING" ? "bg-[#E6E6E7] text-black" : "bg-white text-[#B9B9B9]"}`}>
           글 작성하기
@@ -463,17 +487,16 @@ export default function MyStudyPage() {
                 </div>
 
                 <div className="w-[350px] flex flex-col gap-4">
-                  <div className="flex items-center gap-4 rounded-[16px] px-5 py-4"
+                  <div className="flex items-center gap-3 rounded-[16px] px-5 py-4"
                     style={{ backgroundColor: "#FFF0F0", border: "1px solid #FADADD", boxShadow: "0px 2px 6px rgba(0,0,0,0.08)" }}>
                     <Avatar src={progressData?.profileImage} size={56} />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[14px] font-bold text-gray-700">
-                        {progressData?.name ?? "불러오는 중..."}
-                      </div>
-                      <div className="relative w-full h-[24px] rounded-full overflow-hidden mt-3" style={{ backgroundColor: "white" }}>
-                        <div className="absolute left-0 top-0 h-full rounded-full flex items-center justify-end pr-3"
-                          style={{ width: `${myProgress}%`, backgroundColor: "#F5AFAF", minWidth: "70px" }}>
-                          <span className="text-white text-[12px] font-semibold">{myProgress}%</span>
+                    <div className="flex flex-col flex-1 min-w-0 gap-2">
+                      <span className="text-[15px] font-semibold text-[#5B4B4B]">{progressData?.name}</span>
+                      <div className="relative w-full h-[27px] rounded-full overflow-hidden"
+                        style={{ backgroundColor: "white" }}>
+                        <div className="absolute left-0 top-0 h-full rounded-full flex items-center justify-center"
+                          style={{ width: `${Math.max(myProgress, 14)}%`, backgroundColor: "#F5AFAF" }}>
+                          <span className="text-[12px] font-semibold text-white">{myProgress}%</span>
                         </div>
                       </div>
                     </div>
