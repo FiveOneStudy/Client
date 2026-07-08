@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import StatusBadge from "./StatusBadge";
 import Pagination from "./Pagination";
+import { fetchCertFile } from "../../api/admin";
 
 export default function ApprovalTable({
   title,
@@ -24,7 +25,16 @@ export default function ApprovalTable({
     if (path) navigate(path);
   };
 
-  // 부족한 칸은 빈 행으로 채워서 항상 rowsPerPage만큼 렌더링
+  const handlePdfClick = async (row) => {
+    try {
+      const blob = await fetchCertFile(row.id);
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    } catch (err) {
+      alert("PDF를 불러오지 못했습니다.");
+    }
+  };
+
   const paddedData = [...data, ...Array(Math.max(0, rowsPerPage - data.length)).fill(null)];
 
   return (
@@ -60,6 +70,13 @@ export default function ApprovalTable({
                   >
                     {col.key === "status" ? (
                       <StatusBadge status={row.status} />
+                    ) : col.key === "pdf" ? (
+                      <button
+                        onClick={() => handlePdfClick(row)}
+                        className="bg-G100 text-black font-medium text-xs px-2 py-1 rounded-sm whitespace-nowrap"
+                      >
+                        PDF 보러가기
+                      </button>
                     ) : (
                       row[col.key]
                     )}

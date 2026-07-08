@@ -97,3 +97,13 @@ export const rejectComment = async (id, reason) => {
     }
   );
 };
+
+export const fetchCertFile = async (id) => {
+  const res = await axios.get(`${BASE_URL}/mypage/certifications/${id}/file`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+    responseType: "blob",
+  });
+  return res.data;
+};

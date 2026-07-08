@@ -19,9 +19,10 @@ import {
 const certColumns = [
   { key: "id", label: "ID" },
   { key: "name", label: "자격증명" },
-  { key: "issuer", label: "발급기관" },
+  { key: "pdf", label: "자격증 PDF" },
   { key: "acquiredDate", label: "취득일" },
   { key: "status", label: "상태" },
+   { key: "applyDate", label: "신청일" },
 ];
 
 const postColumns = [
