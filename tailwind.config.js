@@ -9,6 +9,7 @@ module.exports = {
         P300: "#F9DFDF",
         P400: "#F5AFAF",
         P500: "#B88383",
+        G100: "#E6E6E7",
         G200: "#CDCDCF",    
         G300: "#B4B5B7",
         G500: "#828387",
