@@ -22,7 +22,6 @@ const certColumns = [
   { key: "pdf", label: "자격증 PDF" },
   { key: "acquiredDate", label: "취득일" },
   { key: "status", label: "상태" },
-   { key: "applyDate", label: "신청일" },
 ];
 
 const postColumns = [
