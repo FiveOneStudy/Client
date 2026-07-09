@@ -3,7 +3,6 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 
 import searchIcon from '../assets/search.svg';
 import logo from '../assets/logo.svg';
-import bellIcon from '../assets/bell.svg';
 import { fetchTips } from '../api/StudyAPI';
 
 const BASE_URL = 'https://port-0-server-m1ed5avw1d3364c3.sel4.cloudtype.app';
@@ -47,19 +46,6 @@ const linkStyle = ({ isActive }) =>
     : 'text-white px-5 py-3';
 
 export function Nav() {
-  const [showAlarm, setShowAlarm] = useState(false);
-  const alarmRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (alarmRef.current && !alarmRef.current.contains(e.target)) {
-        setShowAlarm(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   return (
     <nav className="w-full h-[70px] bg-P400 border-b border-[#B88383] flex justify-center sticky top-0 z-50">
       <div className="w-full max-w-[1360px] flex items-center justify-between px-6">
@@ -81,17 +67,6 @@ export function Nav() {
               </li>
             ))}
           </ul>
-
-          <div className="relative" ref={alarmRef}>
-            <button onClick={() => setShowAlarm(!showAlarm)}>
-              <img src={bellIcon} alt="bell" className="w-6 h-6" />
-            </button>
-            {showAlarm && (
-              <div className="absolute right-0 mt-4 w-[420px] bg-white rounded-xl shadow-xl border">
-                <div className="px-4 py-3 border-b font-bold text-sm">알림</div>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </nav>

@@ -107,3 +107,12 @@ export const fetchCertFile = async (id) => {
   });
   return res.data;
 };
+
+export const fetchRejectReason = async (id) => {
+  const res = await axios.get(`${BASE_URL}/mypage/certifications/${id}/reason`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  return res.data;
+};
