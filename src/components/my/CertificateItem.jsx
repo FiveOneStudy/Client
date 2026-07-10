@@ -1,3 +1,4 @@
+// components/my/CertificateItem.jsx
 import menuIcon from '../../assets/menu.svg';
 
 const BADGE_COLORS = [
@@ -18,6 +19,7 @@ export function CertificateItem({
   openMenu,
   onMenuClick,
   onDelete,
+  onRejectClick,
 }) {
   return (
     <div className="flex justify-between items-center px-4 py-2 border-b relative">
@@ -42,9 +44,12 @@ export function CertificateItem({
           </span>
         )}
         {status === 'REJECTED' && (
-          <span className="text-[12px] border px-2 py-0.5 rounded-[4px] text-gray-400 border-gray-400">
+          <button
+            onClick={() => onRejectClick(id)}
+            className="text-[12px] border px-2 py-0.5 rounded-[4px] text-gray-400 border-gray-400 hover:bg-gray-50"
+          >
             승인 거절
-          </span>
+          </button>
         )}
 
         <div className="relative">
